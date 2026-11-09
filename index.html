@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>My Stock</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -740,7 +740,13 @@ body.pickbar-on .app{padding-bottom:190px}
 .howl li{display:flex;gap:14px;align-items:flex-start}
 .howl i{flex:none;width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font-style:normal;font-weight:700;display:grid;place-items:center;font-size:14px}
 .howl b{display:block;font-size:16px}.howl span{display:block;font-size:14px;color:var(--muted);margin-top:2px;line-height:1.35}
+
+/* no pinch / double-tap zoom: sized for the phone */
+*{touch-action:pan-x pan-y}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+input,select,textarea{font-size:max(16px,1em)}
 </style>
+<script>['gesturestart','gesturechange','gestureend'].forEach(function(t){document.addEventListener(t,function(e){e.preventDefault();},{passive:false});});document.addEventListener('touchmove',function(e){if(e.touches.length>1||(e.scale&&e.scale!==1))e.preventDefault();},{passive:false});var _lt=0;document.addEventListener('touchend',function(e){var n=Date.now();if(n-_lt<300&&!(e.target.closest&&e.target.closest('input,textarea,select')))e.preventDefault();_lt=n;},{passive:false});</script>
 </head>
 <body>
 <div id="welcome" role="dialog" aria-label="Welcome">
@@ -750,7 +756,7 @@ body.pickbar-on .app{padding-bottom:190px}
     <h1 class="wel-t">My Stock</h1>
     <p class="wel-s">Know what is at home before you go shopping.</p>
     <div class="wel-mid"></div>
-    <div class="wel-btns"><button class="btn primary" id="welOpen">Open</button><button class="btn" id="welHow">How it works</button><div class="wel-v">Version 2026.11.09.3</div></div>
+    <div class="wel-btns"><button class="btn primary" id="welOpen">Open</button><button class="btn" id="welHow">How it works</button><div class="wel-v">Version 2026.11.09.4</div></div>
   </div>
 </div>
 
@@ -1750,7 +1756,7 @@ $('#tabArch').addEventListener('click',()=>{showArchived=true;render()});
 
 
 
-const APP_VERSION='2026.11.09.3';
+const APP_VERSION='2026.11.09.4';
 const COMMON=[
  ['Milk','fridge','dairy','ml',1000,'carton','#3B82F6'],['Eggs','fridge','dairy','pcs',12,'eggs','#E0A526'],['Butter','fridge','dairy','g',200,'block','#E7B416'],['Cheese','fridge','dairy','g',200,'block','#F0A32A'],['Yogurt','fridge','dairy','g',500,'jar','#8B5CF6'],
  ['Chicken breast','fridge','meat','g',500,'bag','#F0A58B'],['Ground beef','fridge','meat','g',500,'bag','#B5473A'],['Strawberries','fridge','fruit','g',454,'box','#E5484D'],['Orange juice','fridge','fruit','ml',1000,'carton','#F08A24'],['Mayonnaise','fridge','sauces','ml',400,'jar','#C9B27C'],['Ketchup','fridge','sauces','ml',400,'bottle','#E5484D'],
