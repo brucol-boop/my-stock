@@ -11,6 +11,7 @@
 <meta name="theme-color" content="#F2F2F7">
 <link rel="apple-touch-icon" href="icon.png">
 <link rel="icon" href="icon.png">
+<link rel="manifest" href="manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -561,6 +562,9 @@ img,svg{-webkit-user-drag:none;-webkit-touch-callout:none}
 .dlg .note2{font-size:12.5px;color:var(--muted);margin:2px 2px 14px;line-height:1.4}
 @keyframes dlgV{from{opacity:0}to{opacity:1}}@keyframes dlgS{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
 @media (prefers-reduced-motion:reduce){.dlg,.dlg-veil{animation:none}}
+
+.gslog{margin-top:10px;height:46px;border-radius:23px}.gslog[hidden]{display:none}.gslog.gl-in{animation:sechIn .35s var(--ease-out) backwards}
+.bknote{color:var(--muted);font-size:14px}
 </style>
 </head>
 <body>
@@ -801,7 +805,9 @@ function unitPrice(x,p){
   return '';
 }
 function unitVal(x,p){ const sz=+x.size; return (sz&&x.price)?x.price/sz:null; }
-const CUR=()=>{ try{ return localStorage.getItem('mystock.cur')||'$'; }catch(e){ return '$'; } };
+const CUR=()=>{ let c=null; try{ c=localStorage.getItem('mystock.cur'); }catch(e){}
+  if(c) return c; const l=(navigator.language||'en').toLowerCase();
+  return l==='pt-br'||l==='pt'?'R$' : /^(fr-fr|fr-be|de|es|it|nl|pt-pt)/.test(l)?'€' : l==='en-gb'?'£' : '$'; };
 const money = n => CUR()+(+n).toFixed(2);
 function fmtDate(s){
   const d = new Date(s+'T12:00:00'); if(isNaN(d)) return s;
@@ -887,7 +893,15 @@ function catsHTML(live,arch){
     : '<div class="state-msg">No products yet. Tap + to add the first one.</div>';
 }
 const _catsHTML=catsHTML;
-catsHTML=function(live,arch){ return _catsHTML(live,arch)+'<button class="catrow" data-settings="1"><span>Backup &amp; settings</span><span class="cmeta">›</span></button>'; };
+const lsGet=k=>{ try{ return localStorage.getItem(k); }catch(e){ return null; } };
+function backupNote(live){
+  if(!live.length) return '';
+  const last=+lsGet('mystock.lastBackup')||0, first=+lsGet('mystock.firstUse')||Date.now(), day=864e5;
+  const stale = last ? Date.now()-last>30*day : Date.now()-first>7*day; if(!stale) return '';
+  const txt = last ? 'Last backup '+Math.round((Date.now()-last)/day)+' days ago' : 'No backup yet';
+  return '<button class="catrow bknote" data-settings="1"><span>'+txt+'</span><span class="cmeta">Back up ›</span></button>';
+}
+catsHTML=function(live,arch){ if(!live.length&&!arch.length) return '<div class="state-msg">No products yet. Tap + to add your first one, or start with a list of common items.</div><button class="btn primary block tall" data-common="1" style="grid-column:1/-1">Add common items</button><button class="catrow" data-settings="1"><span>Backup &amp; settings</span><span class="cmeta">›</span></button>'; return backupNote(live)+_catsHTML(live,arch)+'<button class="catrow" data-settings="1"><span>Backup &amp; settings</span><span class="cmeta">›</span></button>'; };
 function render(){
   const nav = navAnim; navAnim=null;
   const flipMode = flipNext; flipNext=null;
@@ -1080,7 +1094,7 @@ function grocSheetBuild(p){
   const why = on ? (needsBuying(p)?'Running low':'Added by you') : (needsBuying(p)?'Hidden while running low':'In stock');
   h+='<div class="gs-toggle gs-in" style="--d:4"><div><b>On my shopping list</b><small>'+why+'</small></div><button class="gs-sw'+(prevOn?' on':'')+'" role="switch" aria-checked="'+on+'" data-act="gtoggle" aria-label="On my shopping list"><i></i></button></div>';
   if(prevOn!==on) setTimeout(()=>{ const el=document.querySelector('.gs-sw'); if(el) el.classList.toggle('on',on); },40);
-  h+='<div class="gs-actions gs-in" style="--d:5"><button class="btn tall" data-act="gskip" style="flex:1">Done</button><button class="btn tall gsgot'+(grocTick.has(p.id)?' ok':'')+'" data-act="gsgot" style="flex:1.6" aria-pressed="'+grocTick.has(p.id)+'"><i class="gsck"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i><span>Got it</span></button></div>';
+  h+='<div class="gs-actions gs-in" style="--d:5"><button class="btn tall" data-act="gskip" style="flex:1">Done</button><button class="btn tall gsgot'+(grocTick.has(p.id)?' ok':'')+'" data-act="gsgot" style="flex:1.6" aria-pressed="'+grocTick.has(p.id)+'"><i class="gsck"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i><span>Got it</span></button></div><button class="btn block gslog" data-act="logbuy"'+(grocTick.has(p.id)?'':' hidden')+'>Log what you paid</button>';
   return h;
 }
 function cardHTML(p){
@@ -1156,7 +1170,7 @@ function customizeHTML(src, isNew){
   tabFrom=null;
   if(editTab==='details'){
     h+='<div class="field"><label for="f-nameEn">Name (English)</label><input type="text" id="f-nameEn" data-f="nameEn" value="'+esc(src.nameEn)+'"></div>'
-     + '<div class="field"><label for="f-nameFr">Nom (français)</label><input type="text" id="f-nameFr" data-f="nameFr" value="'+esc(src.nameFr||'')+'"></div>'
+     + '<div class="field"><label for="f-nameFr">Second name (optional)</label><input type="text" id="f-nameFr" data-f="nameFr" value="'+esc(src.nameFr||'')+'"></div>'
      + '<div class="field"><label for="f-brand">Brand</label><input type="text" id="f-brand" data-f="brand" value="'+esc(src.brand||'')+'"></div>'
      + '<div class="field"><label>Category</label><div class="chips sm">'+CATS.filter(c=>c.k!=='other').map(c=>'<button class="chip" data-catpick="'+c.k+'" aria-pressed="'+(catOf(src)===c.k)+'">'+c.name+'</button>').join('')+'</div></div>'
      + (SECS[catOf(src)] ? '<div class="field sec-field"><label>Section in '+catName(catOf(src))+' <span style="font-weight:500;opacity:.6;text-transform:none;letter-spacing:0">· optional</span></label><div class="chips sm">'+SECS[catOf(src)].map(x=>'<button class="chip" data-subpick="'+x[0]+'" aria-pressed="'+(subOf(src)===x[0])+'">'+x[1]+'</button>').join('')+'</div></div>' : '');
@@ -1332,6 +1346,7 @@ document.addEventListener('click', e=>{
   }
   else if(act==='gskip'){ closeSheet(); }
   else if(act==='gsgot'){ const on=!b.classList.contains('ok'); b.classList.toggle('ok',on); b.setAttribute('aria-pressed',on); on?grocTick.add(openId):grocTick.delete(openId);
+    { const lg=document.querySelector('.gslog'); if(lg){ lg.hidden=!on; if(on){ lg.classList.remove('gl-in'); void lg.offsetWidth; lg.classList.add('gl-in'); } } }
     const row=document.querySelector('.grow [data-gtick="'+openId+'"]'); if(row){ const r=row.closest('.grow'); if(r) r.classList.toggle('done',on); } }
   else if(act==='back'){ view='main'; sheetNav='back'; renderSheet(); }
   else if(act==='goto'){ sheetNav='fwd'; view=b.dataset.v; if(view==='edit') editTab='details'; renderSheet(); $('#sheet').scrollTop=0; }
@@ -1420,11 +1435,20 @@ function endDrag(e){
 document.addEventListener('pointerup', endDrag);
 document.addEventListener('pointercancel', endDrag);
 
+const SUBWORDS=[['fridge','fruit',/fruit|apple|banana|grape|orange|lemon|lime|melon|mango|pear|peach|berry|juice|suco|fruta/],['fridge','dairy',/milk|leite|cheese|queijo|yogurt|iogurte|cream|requeij|butter|egg|ovo|margarin/],['fridge','meat',/chicken|frango|beef|carne|pork|porco|fish|peixe|sausage|linguica|bacon|ham|presunto|frozen|congelad/],['fridge','sauces',/sauce|molho|ketchup|mayo|mustard|mostarda|dressing|garlic|alho/],
+ ['pantry','oils',/oil|azeite|olive|vinegar|vinagre/],['pantry','grains',/rice|arroz|bean|feij|pasta|macarr|noodle|flour|farinha|oat|aveia|cereal|granola|quinoa|lentil|lentilha|bread|p[aã]o|cracker|biscuit|bolacha/],['pantry','season',/salt|sal\b|pepper|pimenta|sugar|a[cç][uú]car|honey|mel\b|spice|tempero|coffee|caf[eé]|tea\b|ch[aá]\b|cocoa/],['pantry','drinks',/soda|cola|water|[aá]gua|beer|cerveja|wine|vinho|drink/],
+ ['bathroom','hair',/shampoo|conditioner|condicionador|hair|cabelo/],['bathroom','skin',/soap|sabonete|sabao|lotion|cream|creme|cleanser|body|face|deodorant|desodorante|sunscreen|protetor/],['bathroom','oral',/tooth|dente|dental|floss|mouthwash|enxaguante|toilet|papel higi|tissue|wipes|cotton|algod/],
+ ['household','clean',/clean|limpa|dish|detergente|louca|sponge|esponja|bleach|cloro|disinfect|multiuso/],['household','laundry',/laundry|lessive|roupa|softener|amaciante|sabao em po/],['household','paper',/paper towel|trash|lixo|garbage|bag|saco|foil|aluminio|wrap|filme/]];
+function guessSub(cat,name){
+  const n=(name||'').toLowerCase(), k=artKey({nameEn:name,nameFr:''});
+  if(k && SUBDEF[k] && SUBDEF[k][0]===cat) return SUBDEF[k][1];
+  const m=SUBWORDS.find(([c,sk,re])=>c===cat && re.test(n)); return m?m[1]:'';
+}
 function createProduct(){
   if(!draft.nameEn.trim()){ toast('Give it a name first'); return; }
   const base = draft.nameEn.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') || 'item';
   const id = base+'-'+Math.random().toString(36).slice(2,5);
-  const doc = {nameEn:draft.nameEn.trim(), nameFr:(draft.nameFr||'').trim(), brand:(draft.brand||'').trim(), category:draft.category||'pantry', sub:draft.sub||'', icon:draft.icon, color:draft.color, unit:draft.unit, packSize:Math.max(1,+draft.packSize||1), archived:false,
+  const doc = {nameEn:draft.nameEn.trim(), nameFr:(draft.nameFr||'').trim(), brand:(draft.brand||'').trim(), category:draft.category||'pantry', sub:draft.sub||guessSub(draft.category,draft.nameEn), icon:draft.icon, color:draft.color, unit:draft.unit, packSize:Math.max(1,+draft.packSize||1), archived:false,
     packs: draft.have?[{id:'p'+Date.now().toString(36),level:1,size:Math.max(1,+draft.packSize||1),addedAt:new Date().toISOString().slice(0,10)}]:[], purchases:[]};
   products.set(id, doc); flipNext='create'; bornId=id; bornAt=Date.now(); closeSheet();
   if(db) db.doc('products/'+id).set(doc).catch(()=>toast('Could not save the new product')); else toast('Not connected: kept on this screen only');
@@ -1517,6 +1541,31 @@ $('#tabActive').addEventListener('click',()=>{showArchived=false;render()});
 $('#tabArch').addEventListener('click',()=>{showArchived=true;render()});
 
 
+
+const APP_VERSION='2026.11.09';
+const COMMON=[
+ ['Milk','fridge','dairy','ml',1000,'carton','#3B82F6'],['Eggs','fridge','dairy','pcs',12,'eggs','#E0A526'],['Butter','fridge','dairy','g',200,'block','#E7B416'],['Cheese','fridge','dairy','g',200,'block','#F0A32A'],['Yogurt','fridge','dairy','g',500,'jar','#8B5CF6'],
+ ['Chicken breast','fridge','meat','g',500,'bag','#F0A58B'],['Ground beef','fridge','meat','g',500,'bag','#B5473A'],['Strawberries','fridge','fruit','g',454,'box','#E5484D'],['Orange juice','fridge','fruit','ml',1000,'carton','#F08A24'],['Mayonnaise','fridge','sauces','ml',400,'jar','#C9B27C'],['Ketchup','fridge','sauces','ml',400,'bottle','#E5484D'],
+ ['Rice','pantry','grains','g',1000,'bag','#B8893A'],['Beans','pantry','grains','g',1000,'bag','#7A4B2A'],['Pasta','pantry','grains','g',500,'box','#D9822B'],['Rolled oats','pantry','grains','g',500,'canister','#9A6B3F'],['Olive oil','pantry','oils','ml',500,'bottle','#6E8B2F'],['Cooking oil','pantry','oils','ml',900,'bottle','#E7B416'],['Salt','pantry','season','g',1000,'canister','#5B8BD0'],['Sugar','pantry','season','g',1000,'bag','#C7A66B'],['Coffee','pantry','season','g',500,'bag','#6B4A2F'],['Honey','pantry','season','g',500,'jar','#E8A317'],['Soda','pantry','drinks','ml',2000,'can','#D6322F'],
+ ['Shampoo','bathroom','hair','ml',400,'bottle','#2F9BD1'],['Conditioner','bathroom','hair','ml',400,'bottle','#8FB8A0'],['Toothpaste','bathroom','oral','ml',90,'tube','#22A06B'],['Toilet paper','bathroom','oral','pcs',12,'roll','#E26A8A'],['Body wash','bathroom','skin','ml',500,'pump','#B58AF0'],['Hand soap','bathroom','skin','ml',300,'pump','#5FA83A'],['Bar soap','bathroom','skin','pcs',4,'block','#22A06B'],
+ ['Dish soap','household','clean','ml',500,'pump','#14B8A6'],['All-purpose cleaner','household','clean','ml',500,'bottle','#84A52B'],['Laundry detergent','household','laundry','ml',1500,'bottle','#2F9BD1'],['Paper towels','household','paper','pcs',2,'roll','#2F9BD1'],['Trash bags','household','paper','pcs',30,'block','#22A06B']];
+function commonDialog(openDlg,closeDlg){
+  const sel=new Set(); let full=true;
+  const cats=[['fridge','Fridge'],['pantry','Pantry'],['bathroom','Bathroom'],['household','Household']];
+  const have=new Set([...products.values()].map(p=>(p.nameEn||'').toLowerCase()));
+  const body=()=>cats.map(([c,n])=>'<div class="field"><label>'+n+'</label><div class="chips sm">'+COMMON.map((x,i)=>[x,i]).filter(([x])=>x[1]===c&&!have.has(x[0].toLowerCase())).map(([x,i])=>'<button class="chip" data-ci="'+i+'" aria-pressed="'+sel.has(i)+'">'+x[0]+'</button>').join('')+'</div></div>').join('');
+  const d=openDlg('<h2>Common items</h2><div class="note2">Pick what you use. You can edit names, sizes and levels afterwards.</div>'+'<div class="field"><label>Stock</label><div class="chips sm"><button class="chip" id="ciFull" aria-pressed="true">One full pack each</button><button class="chip" id="ciEmpty" aria-pressed="false">Start empty</button></div></div><div id="ciBody">'+body()+'</div><div class="acts"><button class="btn" id="ciCancel">Cancel</button><button class="btn primary" id="ciAdd">Add</button></div>');
+  d.addEventListener('click',e=>{ const c=e.target.closest('[data-ci]'); if(!c) return; const i=+c.dataset.ci; sel.has(i)?sel.delete(i):sel.add(i); c.setAttribute('aria-pressed',String(sel.has(i))); d.querySelector('#ciAdd').textContent=sel.size?'Add '+sel.size:'Add'; });
+  d.querySelector('#ciFull').onclick=()=>{ full=true; d.querySelector('#ciFull').setAttribute('aria-pressed','true'); d.querySelector('#ciEmpty').setAttribute('aria-pressed','false'); };
+  d.querySelector('#ciEmpty').onclick=()=>{ full=false; d.querySelector('#ciEmpty').setAttribute('aria-pressed','true'); d.querySelector('#ciFull').setAttribute('aria-pressed','false'); };
+  d.querySelector('#ciCancel').onclick=closeDlg;
+  d.querySelector('#ciAdd').onclick=()=>{ if(!sel.size){ toast('Pick at least one'); return; }
+    const today=new Date().toISOString().slice(0,10);
+    [...sel].forEach((i,k)=>{ const [n,cat,sub,unit,size,icon,color]=COMMON[i]; const id=n.toLowerCase().replace(/[^a-z0-9]+/g,'-')+'-'+Math.random().toString(36).slice(2,5);
+      db.doc('products/'+id).set({nameEn:n,nameFr:'',brand:'',category:cat,sub,icon,color,unit,packSize:size,archived:false,packs:full?[{id:'p'+Date.now().toString(36)+k,level:1,size,addedAt:today}]:[],purchases:[]}); });
+    closeDlg(); toast(sel.size+' added'); };
+}
+
 /* ---- standalone: backup & settings, log a purchase ---- */
 (function(){
   const today=()=>{ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
@@ -1526,12 +1575,12 @@ $('#tabArch').addEventListener('click',()=>{showArchived=true;render()});
     const cur=CUR(), chips=['$','R$','€','£'].map(c=>'<button class="chip" data-cur="'+c+'" aria-pressed="'+(c===cur)+'">'+c+'</button>').join('');
     const d=open('<h2>Backup &amp; settings</h2><div class="field"><label>Currency</label><div class="chips sm">'+chips+'</div></div>'
       +'<div class="note2">Your stock lives only on this phone. Export a backup now and then, and always open the app from the Home Screen icon.</div>'
-      +'<div class="setrow"><button class="btn block tall" id="dlgExp">Export backup</button><button class="btn block tall" id="dlgImp">Import backup</button><button class="btn block tall danger" id="dlgErase">Erase everything</button></div>'
-      +'<input type="file" id="dlgFile" accept="application/json,.json" hidden><div class="acts"><button class="btn primary" id="dlgDone">Done</button></div>');
+      +'<div class="setrow"><button class="btn block tall" id="dlgCommon">Add common items</button><button class="btn block tall" id="dlgExp">Export backup</button><button class="btn block tall" id="dlgImp">Import backup</button><button class="btn block tall danger" id="dlgErase">Erase everything</button></div>'
+      +'<input type="file" id="dlgFile" accept="application/json,.json" hidden><div class="acts"><button class="btn primary" id="dlgDone">Done</button></div><div class="note2" style="text-align:center;margin-top:12px">My Stock · version '+APP_VERSION+'</div>');
     d.querySelectorAll('[data-cur]').forEach(b=>b.onclick=()=>{ localStorage.setItem('mystock.cur',b.dataset.cur); d.querySelectorAll('[data-cur]').forEach(x=>x.setAttribute('aria-pressed',String(x===b))); lastGridHTML=null; render(); });
-    d.querySelector('#dlgDone').onclick=close;
+    d.querySelector('#dlgDone').onclick=close; d.querySelector('#dlgCommon').onclick=()=>commonDialog(open,close);
     d.querySelector('#dlgExp').onclick=async()=>{
-      const txt=window.__mystock.export(), name='my-stock-backup-'+today()+'.json', file=new File([txt],name,{type:'application/json'});
+      try{ localStorage.setItem('mystock.lastBackup',String(Date.now())); }catch(e){} lastGridHTML=null; const txt=window.__mystock.export(), name='my-stock-backup-'+today()+'.json', file=new File([txt],name,{type:'application/json'});
       try{ if(navigator.canShare&&navigator.canShare({files:[file]})){ await navigator.share({files:[file],title:'My Stock backup'}); return; } }catch(e){ if(e&&e.name==='AbortError') return; }
       const a=document.createElement('a'); a.href=URL.createObjectURL(file); a.download=name; document.body.appendChild(a); a.click(); a.remove(); toast('Backup saved');
     };
@@ -1541,10 +1590,10 @@ $('#tabArch').addEventListener('click',()=>{showArchived=true;render()});
   }
   function logBuy(){
     const p=products.get(openId); if(!p) return;
-    const stores=[...new Set((p.purchases||[]).map(x=>x.store).filter(Boolean))], unit=p.unit;
-    const d=open('<h2>Log a purchase</h2><div class="field"><label for="lbStore">Store</label><input type="text" id="lbStore" list="lbStores" placeholder="Where did you buy it?" autocomplete="off"><datalist id="lbStores">'+stores.map(x=>'<option value="'+esc(x)+'">').join('')+'</datalist></div>'
-      +'<div class="row2"><div class="field"><label for="lbPrice">Price per unit ('+esc(CUR())+')</label><input type="number" id="lbPrice" inputmode="decimal" step="0.01" min="0" placeholder="0.00"></div><div class="field"><label for="lbQty">How many</label><input type="number" id="lbQty" inputmode="numeric" min="1" step="1" value="1"></div></div>'
-      +'<div class="row2"><div class="field"><label for="lbSize">Size of each ('+(unit==='pct'?'packs':esc(unit))+')</label><input type="number" id="lbSize" inputmode="decimal" min="0" step="any" value="'+esc(String(p.packSize||''))+'"></div><div class="field"><label for="lbDate">Date</label><input type="date" id="lbDate" value="'+today()+'"></div></div>'
+    const stores=[...new Set((p.purchases||[]).map(x=>x.store).filter(Boolean))], unit=p.unit, last=(p.purchases||[]).slice().sort((a,b)=>String(b.date).localeCompare(String(a.date)))[0]||{};
+    const d=open('<h2>Log a purchase</h2><div class="field"><label for="lbStore">Store</label><input type="text" id="lbStore" list="lbStores" placeholder="Where did you buy it?" autocomplete="off" value="'+esc(last.store||'')+'"><datalist id="lbStores">'+stores.map(x=>'<option value="'+esc(x)+'">').join('')+'</datalist></div>'
+      +'<div class="row2"><div class="field"><label for="lbPrice">Price per unit ('+esc(CUR())+')</label><input type="number" id="lbPrice" inputmode="decimal" step="0.01" min="0" placeholder="0.00" value="'+esc(last.price!=null?String(last.price):'')+'"></div><div class="field"><label for="lbQty">How many</label><input type="number" id="lbQty" inputmode="numeric" min="1" step="1" value="1"></div></div>'
+      +'<div class="row2"><div class="field"><label for="lbSize">Size of each ('+(unit==='pct'?'packs':esc(unit))+')</label><input type="number" id="lbSize" inputmode="decimal" min="0" step="any" value="'+esc(String(last.size||p.packSize||''))+'"></div><div class="field"><label for="lbDate">Date</label><input type="date" id="lbDate" value="'+today()+'"></div></div>'
       +'<div class="field"><label>Options</label><div class="chips sm"><button class="chip" id="lbStock" aria-pressed="true">Add to stock</button><button class="chip" id="lbPromo" aria-pressed="false">On sale</button></div></div>'
       +'<div class="acts"><button class="btn" id="lbCancel">Cancel</button><button class="btn primary" id="lbSave">Save</button></div>');
     ['#lbStock','#lbPromo'].forEach(q=>d.querySelector(q).onclick=e=>{ const b=e.currentTarget; b.setAttribute('aria-pressed',String(b.getAttribute('aria-pressed')!=='true')); });
@@ -1562,6 +1611,7 @@ $('#tabArch').addEventListener('click',()=>{showArchived=true;render()});
     };
   }
   document.addEventListener('click',e=>{
+    if(e.target.closest('[data-common]')){ e.preventDefault(); e.stopPropagation(); commonDialog(open,close); return; }
     if(e.target.closest('[data-settings]')){ e.preventDefault(); e.stopPropagation(); settings(); return; }
     if(e.target.closest('[data-act="logbuy"]')){ e.preventDefault(); e.stopPropagation(); logBuy(); }
   },true);
@@ -1569,6 +1619,7 @@ $('#tabArch').addEventListener('click',()=>{showArchived=true;render()});
 
 /* ---------- start ---------- */
 render();
+if('serviceWorker' in navigator && /^https?:/.test(location.protocol)){ window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{})); }
 (async function start(){
   const KEY='mystock.v1';
   const read=()=>{ try{ return JSON.parse(localStorage.getItem(KEY)||'{}'); }catch(e){ return {}; } };
@@ -1576,6 +1627,7 @@ render();
   const save=()=>{ try{ localStorage.setItem(KEY,JSON.stringify(store)); }catch(e){ toast('Could not save on this phone'); } };
   const snap=()=>({docs:Object.keys(store).map(id=>({id,data:()=>JSON.parse(JSON.stringify(store[id]))}))});
   const fire=()=>subs.forEach(f=>f(snap()));
+  try{ if(!localStorage.getItem('mystock.firstUse')) localStorage.setItem('mystock.firstUse',String(Date.now())); }catch(e){}
   window.__mystock={ export:()=>JSON.stringify({app:'my-stock',v:1,cur:CUR(),products:store}), import:(txt)=>{ const o=JSON.parse(txt); if(!o||o.app!=='my-stock'||!o.products) throw new Error('bad'); store=o.products; if(o.cur) localStorage.setItem('mystock.cur',o.cur); save(); fire(); }, erase:()=>{ store={}; save(); fire(); } };
   db={ collection:()=>({ onSnapshot:(cb)=>{ subs.push(cb); setTimeout(()=>cb(snap()),0); } }),
        doc:(path)=>{ const id=path.split('/')[1]; return {
