@@ -509,6 +509,8 @@ input[type=text],input[type=number],select{background:var(--fillgray);border:0;b
 .toast{background:rgba(28,28,30,.92);color:#fff;border-radius:22px;padding:11px 18px;font-weight:500;bottom:calc(104px + env(safe-area-inset-bottom));backdrop-filter:blur(16px)}
 
 .btn.gsgot{display:flex;align-items:center;justify-content:center;gap:9px;background:var(--surface-2,color-mix(in srgb,var(--ink) 8%,transparent));color:var(--ink);transition:background .25s,color .25s,transform .14s var(--ease-out)}
+.btn.gsgot{overflow:hidden;white-space:nowrap;min-width:0;transition:flex-grow .34s var(--ease-out),opacity .22s,margin .34s var(--ease-out),padding .34s,background .25s,color .25s,transform .14s var(--ease-out)}
+.btn.gsgot.gshide{flex-grow:0!important;flex-basis:0;opacity:0;margin-left:-10px;padding-left:0;padding-right:0;pointer-events:none}
 .gsck{width:24px;height:24px;border-radius:12px;border:2px solid color-mix(in srgb,var(--ink) 28%,transparent);display:grid;place-items:center;box-sizing:border-box;transition:background .25s,border-color .25s,transform .3s var(--ease-spring,ease)}
 .gsck svg{opacity:0;transform:scale(.4);transition:opacity .15s,transform .3s var(--ease-spring,ease)}
 .btn.gsgot.ok{background:#34C759;color:#fff;box-shadow:0 6px 16px rgba(52,199,89,.35)}
@@ -598,6 +600,146 @@ img,svg{-webkit-user-drag:none;-webkit-touch-callout:none}
 .dlg-veil.how{z-index:400}
 .how-sheet{max-height:92vh;background:var(--bg)}
 .how-sheet h2{font-size:30px;margin:0}
+/* ---------- after shopping: picked bar + check-in sheet ---------- */
+.pickbar{position:fixed;left:22px;right:22px;bottom:calc(100px + env(safe-area-inset-bottom));max-width:476px;margin:0 auto;z-index:14;height:58px;border:0;border-radius:29px;background:var(--accent);color:var(--accent-ink);display:flex;align-items:center;gap:10px;padding:0 8px 0 20px;text-align:left;cursor:pointer;box-shadow:0 12px 28px color-mix(in srgb,var(--accent) 40%,transparent);opacity:0;visibility:hidden;pointer-events:none;transform:translateY(24px) scale(.97);transition:opacity .2s,transform .24s var(--ease-in),visibility 0s .24s}
+.pickbar.on{opacity:1;visibility:visible;pointer-events:auto;transform:none;transition:opacity .2s,transform .5s var(--ease-spring),visibility 0s}
+.pickbar:active{transform:scale(.98)}
+.pickbar .pbt{flex:1;min-width:0}
+.pickbar .pbt b{display:block;font-size:16px;font-weight:700;line-height:1.15}
+.pickbar .pbt small{display:block;font-size:12px;opacity:.85;line-height:1.2}
+.pickbar .pbgo{height:42px;border-radius:21px;background:rgba(255,255,255,.22);padding:0 16px;display:flex;align-items:center;font-size:15px;font-weight:700;white-space:nowrap}
+.pickbar.pop .pbt b{animation:bumpK .36s var(--ease-out)}
+.toast{position:fixed;left:50%;z-index:40;width:max-content;max-width:calc(100% - 44px);box-sizing:border-box;text-align:center;font-size:14.5px;line-height:1.3}
+body.pickbar-on .toast{bottom:calc(172px + env(safe-area-inset-bottom))}
+body.pickbar-on .app{padding-bottom:190px}
+.sheet.ck{padding-bottom:0}
+.ckhead{display:flex;justify-content:space-between;align-items:center;margin:0 2px}
+.ckhead h2{margin:0;font-size:28px;font-weight:700;letter-spacing:-.03em}
+.ckcancel{border:0;background:none;color:var(--accent);font-size:17px;font-weight:600;padding:8px 4px;cursor:pointer}
+.cksub{margin:2px 2px 12px;font-size:14.5px;color:var(--muted)}
+.cklab{margin:10px 4px 6px;font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.ckstores{display:flex;gap:8px;margin:0 -20px;padding:2px 20px 4px;overflow-x:auto;scrollbar-width:none}
+.ckstores::-webkit-scrollbar{display:none}
+.ckst{flex:none;height:36px;padding:0 14px 0 8px;border-radius:18px;border:0;background:var(--fillgray,rgba(120,120,128,.14));color:var(--ink);display:flex;align-items:center;gap:7px;font-size:14px;font-weight:600;cursor:pointer;transition:background-color .22s,color .22s,transform .14s var(--ease-out)}
+.ckst.noicon{padding-left:14px}
+.ckst[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.ckst:active{transform:scale(.96)}
+.ckother{margin:8px 0 0;width:100%;box-sizing:border-box;height:44px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);padding:0 14px;font-size:16px}
+.cklist{background:var(--surface);border-radius:22px;overflow:hidden;box-shadow:var(--shadow)}
+.ckrow{position:relative;overflow:hidden;border-bottom:1px solid var(--line);touch-action:pan-y}
+.ckrow:last-child{border-bottom:0}
+.ckact{position:absolute;right:0;top:0;bottom:0;width:96px;border:0;background:#FF9500;color:#fff;font-size:14px;font-weight:700;line-height:1.15;cursor:pointer}
+.ckrow.nf .ckact{background:var(--fillgray,rgba(120,120,128,.3));color:var(--accent)}
+.ckin{position:relative;display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--surface);transition:transform .34s var(--ease-out),opacity .25s}
+.ckrow.drag .ckin{transition:none}
+.ckrow.open .ckin{transform:translateX(-96px)}
+.ckrow.nf .ckin{opacity:.55}
+.ckrow.nf .ckq,.ckrow.nf .ckp{display:none}
+.ckrow .cknf{display:none;font-size:12.5px;font-weight:600;color:#C77700}
+.ckrow.nf .cknf{display:block}
+.ckrow.nf .cksz{display:none}
+.cktile{flex:none;width:38px;height:38px;border-radius:12px;display:grid;place-items:center}
+.cktx{flex:1;min-width:0}
+.cktx b{display:block;font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cktx small{display:block;font-size:12px;color:var(--muted)}
+.ckq{flex:none;display:flex;align-items:center;height:32px;border-radius:16px;background:var(--fillgray,rgba(120,120,128,.14));font-weight:700}
+.ckq button{width:30px;height:32px;border:0;background:none;color:var(--accent);font-size:19px;font-weight:600;cursor:pointer;padding:0;transition:transform .14s var(--ease-out)}
+.ckq button:active{transform:scale(.85)}
+.ckq span{min-width:16px;text-align:center;font-size:16px;font-variant-numeric:tabular-nums}
+.ckq span.bump{animation:bumpK .3s var(--ease-out)}
+.ckp{flex:none;width:56px;height:32px;border-radius:10px;border:0;background:var(--bg);color:var(--ink);text-align:center;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;padding:0;-webkit-appearance:none}
+.ckp::placeholder{color:var(--muted);opacity:1}
+.cktot{display:flex;justify-content:space-between;align-items:baseline;margin:14px 6px 0;font-size:14px;color:var(--muted)}
+.cktot b{font-size:22px;color:var(--ink);font-variant-numeric:tabular-nums}
+.cknote{margin:10px 6px 0;font-size:12px;color:var(--muted);line-height:1.35}
+.ckwarn{margin:12px 2px 0;background:rgba(255,149,0,.13);border-radius:16px;padding:11px 14px;font-size:13.5px;line-height:1.3;color:var(--ink);display:none}
+.ckwarn.on{display:block;animation:gsIn .4s var(--ease-out) backwards}
+.ckfoot{position:sticky;bottom:0;margin:12px -20px 0;padding:12px 20px calc(18px + env(safe-area-inset-bottom));background:linear-gradient(180deg,transparent,var(--sheet) 28%)}
+.ckgo{width:100%;height:58px;border:0;border-radius:29px;background:var(--accent);color:var(--accent-ink);font-size:18px;font-weight:700;cursor:pointer;box-shadow:0 10px 24px color-mix(in srgb,var(--accent) 35%,transparent);transition:transform .14s var(--ease-out),opacity .2s}
+.ckgo:active{transform:scale(.98)}
+.ckgo:disabled{opacity:.4;box-shadow:none}
+.ckrow.ckin-fx{animation:gsIn .46s var(--ease-out) backwards;animation-delay:calc(var(--d,0)*55ms)}
+@media (prefers-reduced-motion:reduce){.pickbar,.ckin{transition:none}.ckrow.ckin-fx,.ckwarn.on{animation:none}}
+
+/* ---------- round: cart on cards, overlay sheets, size chips ---------- */
+.minis{top:10px;right:10px;flex-direction:column;align-items:center;gap:3px;z-index:3}
+.minis.hasc{top:44px}
+.minis .more{margin:0;text-align:center;line-height:1}
+.ctop.hm{padding-right:40px}
+.cartdot{position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:13px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;z-index:3;box-shadow:0 2px 8px color-mix(in srgb,var(--accent) 40%,transparent);animation:popK .42s var(--ease-spring) backwards}
+.cartdot svg{width:15px;height:15px}
+.grow.born{animation:bornRow 2.6s var(--ease-out)}
+@keyframes bornRow{0%{background:color-mix(in srgb,var(--accent) 16%,transparent)}100%{background:transparent}}
+.toast.act{display:flex;align-items:center;gap:16px}
+.toast.act.on{pointer-events:auto}
+.toast .tundo{border:0;background:none;color:#7DB7FF;font:inherit;font-weight:700;padding:2px 0;cursor:pointer}
+.toast{z-index:60}
+.ov{position:fixed;inset:0;z-index:50;visibility:hidden;transition:visibility 0s .32s}
+.ov.on{visibility:visible;transition:none}
+.ovveil{position:absolute;inset:0;background:rgba(8,14,12,.36);opacity:0;transition:opacity .28s}
+.ov.on .ovveil{opacity:1}
+.ovs{position:absolute;left:0;right:0;bottom:0;max-width:520px;margin:0 auto;max-height:90%;overflow-y:auto;background:var(--sheet);border-radius:30px 30px 0 0;padding:8px 20px calc(24px + env(safe-area-inset-bottom));transform:translateY(102%);transition:transform .3s var(--ease-in);box-shadow:0 -12px 40px rgba(0,0,0,.22)}
+.ov.on .ovs{transform:none;transition:transform .5s var(--ease-spring)}
+.ovt{margin:2px 2px 0;font-size:24px;font-weight:700;letter-spacing:-.02em}
+.ovh{display:flex;justify-content:space-between;align-items:center}
+.ovs .ckgo{margin-top:16px}
+.szchip{display:inline-flex;align-items:center;height:22px;padding:0 9px;margin-top:2px;border:0;border-radius:11px;background:color-mix(in srgb,var(--accent) 12%,transparent);color:var(--accent);font-size:11.5px;font-weight:700;cursor:pointer;transition:transform .14s var(--ease-out),background-color .2s}
+.szchip:active{transform:scale(.95)}
+.szchip.big{height:34px;padding:0 13px;font-size:15px;border-radius:17px;margin:0}
+.pnote .szchip{height:26px;font-size:13px;margin:0}
+.szbox{margin-top:16px;height:64px;border-radius:18px;background:var(--surface);display:flex;align-items:center;gap:6px;padding:0 14px;box-shadow:var(--shadow)}
+.szin{flex:1;min-width:0;border:0;background:none;color:var(--ink);font-size:30px;font-weight:700;letter-spacing:-.02em;padding:0;font-variant-numeric:tabular-nums}
+.szin:focus{outline:none}
+.szu{font-size:18px;font-weight:600;color:var(--muted);margin-right:6px}
+.szchips{display:flex;gap:8px;margin-top:12px}
+.szc{flex:1;padding:9px 6px;border:0;border-radius:16px;background:var(--fillgray,rgba(120,120,128,.14));color:var(--ink);text-align:center;cursor:pointer;transition:background-color .2s,color .2s,transform .14s var(--ease-out)}
+.szc b{display:block;font-size:16px}
+.szc small{display:block;font-size:11px;opacity:.75}
+.szc[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.szc:active{transform:scale(.97)}
+.szn{margin:12px 4px 0;font-size:12.5px;color:var(--muted);line-height:1.35}
+.aprows{background:var(--surface);border-radius:20px;padding:2px 16px;box-shadow:var(--shadow);margin-top:14px}
+.aprow{display:flex;align-items:center;min-height:56px;border-bottom:1px solid var(--line)}
+.aprow:last-child{border-bottom:0}
+.aprow>span:first-child{flex:1;font-size:16px}
+.apst{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;padding:8px 0}
+.apst .ckst{height:32px;padding:0 12px;font-size:13px}
+.alrt{background:var(--surface);border-radius:18px;padding:14px 16px;box-shadow:var(--shadow)}
+.alrth{display:flex;justify-content:space-between;align-items:baseline;font-size:15px;font-weight:600}
+.alrth b{font-size:19px;color:var(--accent)}
+.alrt input[type=range]{width:100%;margin:12px 0 4px;accent-color:var(--accent)}
+.alrl{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
+.alrt .chips{margin-top:10px}
+
+/* new product sheet: compact, fixed footer */
+.sheet.nw{display:flex;flex-direction:column;overflow:hidden;padding-bottom:12px}
+.sheet.nw:not(.on){display:none}
+.nwbody{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:2px 2px 10px;margin:0 -2px}
+.nwbody .etabs{margin-bottom:12px}
+.nwbody .etab{height:40px}
+.nwbody .ebody .field{margin-bottom:12px}
+.nwbody .ebody input[type=text]{height:46px;font-size:16px;padding:0 14px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.chips.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.chips.g2 .chip{height:42px;padding:0 8px;font-size:14.5px;border-radius:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nwfoot{flex:none;padding-top:10px;border-top:1px solid color-mix(in srgb,var(--ink) 8%,transparent);display:flex;flex-direction:column;gap:10px}
+.havesw{display:flex;align-items:center;justify-content:space-between;font-size:15.5px;font-weight:600;padding:0 2px;min-height:44px;cursor:pointer}
+.havesw input{position:absolute;opacity:0;pointer-events:none}
+.havesw i{width:51px;height:31px;border-radius:16px;background:color-mix(in srgb,var(--ink) 16%,transparent);position:relative;flex:none;transition:background .25s var(--ease-out)}
+.havesw i::after{content:"";position:absolute;top:2px;left:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.25);transition:transform .28s cubic-bezier(.34,1.4,.64,1)}
+.havesw input:checked+i{background:var(--accent)}
+.havesw input:checked+i::after{transform:translateX(20px)}
+@media (prefers-reduced-motion:reduce){.havesw i,.havesw i::after{transition:none}}
+
+/* round: manage row, toast on top when a sheet is open, wrap stores, help */
+.manage{display:flex;gap:10px;margin-top:8px;padding-top:14px;border-top:1px solid color-mix(in srgb,var(--ink) 8%,transparent)}
+.manage .btn{flex:1}
+.ckstores{flex-wrap:wrap;overflow-x:visible;margin:0}
+.helpbtn{font-size:20px;font-weight:700;background:var(--surface);color:var(--accent)}
+.howl{list-style:none;margin:6px 0 4px;padding:0;display:flex;flex-direction:column;gap:12px}
+.howl li{display:flex;gap:14px;align-items:flex-start}
+.howl i{flex:none;width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font-style:normal;font-weight:700;display:grid;place-items:center;font-size:14px}
+.howl b{display:block;font-size:16px}.howl span{display:block;font-size:14px;color:var(--muted);margin-top:2px;line-height:1.35}
 </style>
 </head>
 <body>
@@ -608,7 +750,7 @@ img,svg{-webkit-user-drag:none;-webkit-touch-callout:none}
     <h1 class="wel-t">My Stock</h1>
     <p class="wel-s">Know what is at home before you go shopping.</p>
     <div class="wel-mid"></div>
-    <div class="wel-btns"><button class="btn primary" id="welOpen">Open</button><button class="btn" id="welHow">How it works</button><div class="wel-v">Version 2026.11.09.2</div></div>
+    <div class="wel-btns"><button class="btn primary" id="welOpen">Open</button><button class="btn" id="welHow">How it works</button><div class="wel-v">Version 2026.11.09.3</div></div>
   </div>
 </div>
 
@@ -635,6 +777,8 @@ img,svg{-webkit-user-drag:none;-webkit-touch-callout:none}
   <button id="navStock" aria-current="page"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.8"/></svg><span>Stock</span></button>
   <button id="navGroceries" aria-current="false"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2.5l2.2 10.2a1.6 1.6 0 0 0 1.6 1.3h8a1.6 1.6 0 0 0 1.6-1.2L20.5 8H6.4"/><circle cx="9.6" cy="19.4" r="1.2"/><circle cx="17" cy="19.4" r="1.2"/></svg><span>Groceries</span><i class="badge" id="badge" style="display:none"></i></button>
 </nav>
+<button class="pickbar" id="pickbar" data-ck="open" aria-label="Add picked items to stock"><span class="pbt"><b></b><small></small></span><span class="pbgo">Add to stock ›</span></button>
+<div class="ov" id="ov"><div class="ovveil" data-ov="close"></div><div class="ovs" id="ovs"></div></div>
 <div class="toast" id="toast" role="status"></div>
 
 <script>
@@ -789,12 +933,12 @@ const ART = {"blueberries": "<circle cx=\"32\" cy=\"24\" r=\"12\" fill=\"url(#b0
 (function(){ const d=document.createElement('div'); d.setAttribute('aria-hidden','true'); d.style.cssText='position:absolute;width:0;height:0;overflow:hidden'; d.innerHTML='<svg width="0" height="0"><defs>'+ART_DEFS+'</defs></svg>'; document.body.appendChild(d); })();
 
 /* custom icons also match by name, so a new "Blueberry" or "Eggs" picks up the drawn icon */
-const ART_NAMES=[['blueberries',/blueberr|bleuet/],['raspberries',/raspberr|framboise/],['strawberries',/strawberr|fraise|morango/],['lemons',/\blime|lemon|citron/],['eggs',/\begg|oeuf|œuf|ovo/],
- ['butter',/butter|beurre|manteiga/],['sliced-cheese',/(sliced|slice).*cheese|cheese.*slice|fromage.*tranche/],['sliced-chicken',/sliced.*chicken|chicken.*slice/],['chicken-breast',/chicken|poulet|frango/],
+const ART_NAMES=[['sliced-bread',/\bbread|\bpain\b|p[aã]o de forma|\bp[aã]o\b/],['blueberries',/blueberr|bleuet/],['raspberries',/raspberr|framboise/],['strawberries',/strawberr|fraise|morango/],['lemons',/\blime|lemon|citron/],['eggs',/\beggs?\b|oeuf|œuf|\bovos?\b/],
+ ['butter',/^(?!.*(peanut|almond|nut|arachide|amendoim|cacahu)).*(butter|beurre|manteiga)/],['sliced-cheese',/(sliced|slice).*cheese|cheese.*slice|fromage.*tranche/],['sliced-chicken',/sliced.*chicken|chicken.*slice/],['chicken-breast',/chicken|poulet|frango/],
  ['bar-soap',/bar.*soap|soap.*bar|savon en barre/],['toothpaste',/toothpaste|dentifrice|pasta de dente|creme dental/],['paper-towels',/paper towel|essuie|papel toalha/],['toilet-paper',/toilet (paper|tissue)|papier hygi|papel higi/],
- ['flushable-wipes',/wipes|lingette/],['dishwasher-tablets',/dishwasher|lave-vaisselle|lava.?lou/],['laundry-pods',/laundry (pod|capsule)|lessive|detergent pod/],['taco-shells',/taco/],['rigatoni',/rigatoni|penne|pasta|macaroni|spaghetti|macarr/],
- ['frozen-gnocchi',/gnocchi|nhoque/],['quinoa',/quinoa/],['rolled-oats',/oat|avoine|aveia/],['granola',/granola/],['ground-beef',/ground beef|minced|b[oœ]uf hach|carne mo[ií]da/],['pork-loin',/pork|porc|lombo|porco/],['beef',/\bbeef|b[oœ]uf|\bsteak|carne/],
- ['black-pepper',/pepper|poivre|pimenta/],['table-salt',/\bsalt|\bsel\b|\bsal\b/],['honey',/honey|miel|\bmel\b/],['orange-juice',/orange juice|jus d.orange|suco de laranja/],['soda',/\bsoda|cola|coke|pop\b|refrigerante/]];
+ ['flushable-wipes',/wipes|lingette/],['dishwasher-tablets',/dishwasher|lave-vaisselle|lava.?lou/],['laundry-pods',/laundry (pod|capsule)|lessive|detergent pod/],['taco-shells',/taco/],['rigatoni',/^(?!.*(sauce|soup|salad|sauc)).*(rigatoni|penne|pasta|macaroni|spaghetti|macarr)/],
+ ['frozen-gnocchi',/gnocchi|nhoque/],['quinoa',/quinoa/],['rolled-oats',/\boat|avoine|aveia/],['granola',/granola/],['ground-beef',/ground beef|(minced|ground) (beef|meat)|b[oœ]uf hach|carne mo[ií]da/],['pork-loin',/pork|porc|lombo|porco/],['beef',/\bbeef|b[oœ]uf|\bsteak|carne/],
+ ['black-pepper',/(black|ground) pepper|poivre|pimenta.do.reino|^pepper\b/],['table-salt',/\bsalt|\bsel\b|\bsal\b/],['honey',/honey|miel|\bmel\b/],['orange-juice',/orange juice|jus d.orange|suco de laranja/],['soda',/^(?!.*(baking|bicarb)).*(\bsoda|\bcola|\bcoke|\bpop\b|refrigerante)/]];
 const artKey=p=>{ if(ART[p.id]) return p.id; const n=((p.nameEn||'')+' '+(p.nameFr||'')).toLowerCase(); const m=ART_NAMES.find(([k,re])=>ART[k]&&re.test(n)); return m?m[0]:null; };
 function artIcon(p, uid, cls){
   const k = artKey(p), a = k && ART[k];
@@ -861,7 +1005,8 @@ function fmtDate(s){
 function sortedPacks(p){ return (p.packs||[]).slice().sort((a,b)=>a.level-b.level); }
 function activeLevel(p){ const s=sortedPacks(p); return s.length? s[0].level : 0; }
 function packSize(p,pk){ return pk.size || p.packSize || 1; }
-let toastT; function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('on'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('on'),2800); }
+let toastT, toastL, toastAct=null; function toast(msg,act){ const t=$('#toast'); toastAct=act||null; t.classList.toggle('act',!!act); t.textContent=msg; if(act){ const b=document.createElement('button'); b.className='tundo'; b.textContent='Undo'; t.appendChild(b); } t.style.bottom=''; const lift=()=>{ const o=$('#ov.on #ovs')||$('#sheet.on'); if(o){ const r=o.getBoundingClientRect(); t.style.bottom=Math.round(innerHeight-r.top+10)+'px'; } else t.style.bottom=''; }; lift(); clearInterval(toastL); toastL=setInterval(lift,120); t.classList.add('on'); clearTimeout(toastT); toastT=setTimeout(()=>{t.classList.remove('on'); clearInterval(toastL);},act?5200:2800); }
+document.addEventListener('click',e=>{ if(e.target.closest('.tundo')){ const f=toastAct; toastAct=null; $('#toast').classList.remove('on'); if(f) f(); } });
 
 /* ---------- state + storage ---------- */
 let db=null, products=new Map(), showArchived=false, openId=null, mode=null, draft=null, dragging=false, loaded=false;
@@ -877,7 +1022,8 @@ function persist(id, patch){
 /* ---------- grid ---------- */
 const byName=(a,b)=>(a.nameEn||'').localeCompare(b.nameEn||'',undefined,{sensitivity:'base'});
 const stockLeft=p=>(p.packs||[]).reduce((n,x)=>n+x.level,0);
-const needsBuying=p=>stockLeft(p)<=.3;
+const alertOf=p=>(+p.alert>0&&+p.alert<=1)?+p.alert:.3;
+const needsBuying=p=>stockLeft(p)<=alertOf(p);
 /* shopping-list override: gpin {mode:'on'|'off', at: stock when set}; void once the product is restocked */
 const onList=p=>{ const g=p.gpin; if(g && g.mode && stockLeft(p) <= (+g.at||0)+.05) return g.mode==='on'; return needsBuying(p); };
 const CATS=[
@@ -953,6 +1099,7 @@ function render(){
   const all = [...products.entries()].map(([id,p])=>Object.assign({id},p));
   const live = all.filter(p=>!p.archived), arch = all.filter(p=>p.archived);
   const toBuy = live.filter(onList);
+  if(loaded){ let tc=false; grocTick.forEach(id=>{ const q=products.get(id); if(!q||q.archived||!onList(Object.assign({id},q))){ grocTick.delete(id); tc=true; } }); if(tc) saveTicks(); }
   const empty = live.filter(p=>stockLeft(p)<=0).length;
   const low = live.filter(p=>stockLeft(p)>0 && needsBuying(p)).length;
   const groceries = appTab==='groceries';
@@ -970,13 +1117,13 @@ function render(){
       summary = toBuy.length ? [ge&&ge+' empty', gl&&gl+' running low', ga&&ga+' added'].filter(Boolean).join(' · ') : 'Nothing to buy right now';
     }
   } else if(catView===null){
-    summary = live.length+' items · '+empty+' empty · '+low+' low';
+    summary = live.length+(live.length===1?' item':' items')+' · '+empty+' empty · '+low+' low';
   } else if(catView==='archived'){
     list = arch; title = 'Archived'; summary = arch.length+(arch.length===1?' item':' items')+' · history kept';
   } else {
     list = live.filter(p=>catOf(p)===catView||pinned(p)); title = catName(catView);
     const lb = live.filter(p=>catOf(p)===catView && needsBuying(p)).length;
-    summary = live.filter(p=>catOf(p)===catView).length+' items'+(lb?' · '+lb+' to buy':'');
+    summary = (n=>n+(n===1?' item':' items'))(live.filter(p=>catOf(p)===catView).length)+(lb?' · '+lb+' to buy':'');
   }
   if(list) list = list.slice().sort(byName);
   if(groceries && grocOff && list) list.sort((a,b)=>stockLeft(a)-stockLeft(b)||byName(a,b));
@@ -988,7 +1135,7 @@ function render(){
   document.querySelector('.tabbar').style.setProperty('--i', groceries?1:0);
   $('.tabs').style.display = 'none';
   $('#backBtn').hidden = !((!groceries && catView!==null) || (groceries && grocOff)); $('#backBtn').textContent = groceries ? '‹ Groceries' : '‹ Categories';
-  $('#addBtn').style.display = groceries ? 'none' : '';
+  $('#addBtn').style.display = '';
   { const sb=$('#sortBtn'); const show=!groceries && catView && catView!=='archived' && !!SECS[catView]; sb.hidden=!show; sb.setAttribute('aria-pressed',String(sortLow)); }
   $('#navStock').setAttribute('aria-current', groceries ? 'false' : 'page');
   $('#navGroceries').setAttribute('aria-current', groceries ? 'page' : 'false');
@@ -1010,9 +1157,10 @@ function render(){
   }
   const gridChanged = !(gridHTML===lastGridHTML && !nav && !flipMode);
   if(gridChanged){ lastGridHTML = gridHTML; g.innerHTML = gridHTML; if(secFx){ g.querySelectorAll('.sech,.lowpill').forEach(e=>e.classList.add('fx')); secFx=false; } }
-  $('#note').textContent = all.some(p=>p.sample) ? 'Sample products shown. Send me your real inventory and I will replace them.' : '';
+  $('#note').textContent = all.some(p=>p.sample) ? 'Sample products shown. Add your own and they go away.' : '';
   if(gridChanged){ settleFills(g); gridFx(g, nav, flipMode, prevRects); }
   if(openId && mode==='view' && !dragging) renderSheet();
+  updatePickBar();
 }
 
 let grocStore='all'; const grocTick=new Set();
@@ -1038,9 +1186,9 @@ function grocIco(p){
 }
 function tickSVG(){ return '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'; }
 function grocRow(p,info,note,noteBest,price){
-  const done=grocTick.has(p.id);
+  const done=grocTick.has(p.id), born=(p.id===bornId&&Date.now()-bornAt<3000);
   const c=p.color||'#8FB8A0';
-  return '<div class="grow'+(done?' done':'')+'" data-id="'+esc(p.id)+'">'
+  return '<div class="grow'+(done?' done':'')+(born?' born':'')+'" data-id="'+esc(p.id)+'">'
     +'<button class="gck" data-gtick="'+esc(p.id)+'" aria-label="Tick '+esc(p.nameEn)+'"><i>'+tickSVG()+'</i></button>'
     +'<button class="gmain" data-open="'+esc(p.id)+'"><span class="gtile" style="background:linear-gradient(180deg,'+c+'CC,'+c+')">'+grocIco(p)+'</span>'
     +'<span class="gtx"><b>'+esc(p.nameEn)+'</b><small'+(noteBest?' class="best"':'')+'>'+esc(note)+'</small></span>'
@@ -1067,17 +1215,17 @@ function groceryHTML(list){
   const tot=arr=>arr.reduce((a,o)=>a+(o.i.usual?o.i.usual.price:0),0);
   const lastTxt=o=>o.i.usual?'Last paid '+money(o.i.usual.price)+' · '+fmtDate(o.i.usual.date):'No price yet';
   let h='<div class="gwrap"><div class="gchips">'
-    +'<button class="gchip'+(grocStore==='all'?' on':'')+'" data-gstore="all"><span class="gall">All</span><span><b>All</b><small>'+items.length+' · '+money(tot(items))+'</small></span></button>'
-    +stores.map(st=>'<button class="gchip'+(grocStore===st?' on':'')+'" data-gstore="'+esc(st)+'">'+storeBadge(st,24)+'<span><b>'+esc(st)+'</b><small>'+byStore.get(st).length+' · '+money(tot(byStore.get(st)))+'</small></span></button>').join('')
+    +'<button class="gchip'+(grocStore==='all'?' on':'')+'" data-gstore="all"><span class="gall">All</span><span><b>All</b><small>'+items.length+' · '+moneyT(tot(items))+'</small></span></button>'
+    +stores.map(st=>'<button class="gchip'+(grocStore===st?' on':'')+'" data-gstore="'+esc(st)+'">'+storeBadge(st,24)+'<span><b>'+esc(st)+'</b><small>'+byStore.get(st).length+' · '+moneyT(tot(byStore.get(st)))+'</small></span></button>').join('')
     +'</div>';
   if(grocStore==='all'){
     stores.forEach(st=>{ const arr=byStore.get(st);
-      h+='<div class="gsec"><span>'+esc(st)+'</span><span>'+money(tot(arr))+'</span></div><div class="glist">'
+      h+='<div class="gsec"><span>'+esc(st)+'</span><span>'+moneyT(tot(arr))+'</span></div><div class="glist">'
         +arr.map(o=>{ const isBest=o.i.best&&o.i.best.store===st; return grocRow(o.p,o.i,leftLabel(o.p)+' · '+lastTxt(o).replace('Last paid ','paid '),false,o.i.usual.price); }).join('')+'</div>'; });
     if(nopr.length) h+='<div class="gsec"><span>No price yet</span><span></span></div><div class="glist">'+nopr.map(o=>grocRow(o.p,o.i,leftLabel(o.p),false,null)).join('')+'</div>';
   } else {
     const arr=byStore.get(grocStore)||[];
-    h+='<div class="gstore">'+storeBadge(grocStore)+'<div style="flex:1"><b>'+esc(grocStore)+'</b><small>'+arr.length+(arr.length===1?' item':' items')+' · est. '+money(tot(arr))+'</small></div><small class="gtn">'+arr.filter(o=>grocTick.has(o.p.id)).length+'/'+arr.length+' ticked</small></div>';
+    h+='<div class="gstore">'+storeBadge(grocStore)+'<div style="flex:1"><b>'+esc(grocStore)+'</b><small>'+arr.length+(arr.length===1?' item':' items')+' · est. '+moneyT(tot(arr))+'</small></div><small class="gtn">'+arr.filter(o=>grocTick.has(o.p.id)).length+'/'+arr.length+' ticked</small></div>';
     h+='<div class="gsec"><span>Usually bought here</span><span></span></div><div class="glist">'
       +arr.map(o=>{ const isBest=o.i.best&&o.i.best.store===grocStore;
         const d=o.i.usual.date; const note=isBest?'Best price here':leftLabel(o.p)+' · '+lastTxt(o).replace('Last paid ','paid ');
@@ -1097,7 +1245,7 @@ function groceryHTML(list){
 }
 document.addEventListener('click',e=>{
   const c=e.target.closest('[data-gstore]'); if(c){ grocStore=c.dataset.gstore; lastGridHTML=null; render(); return; }
-  const t=e.target.closest('[data-gtick]'); if(t){ const id=t.dataset.gtick; grocTick.has(id)?grocTick.delete(id):grocTick.add(id);
+  const t=e.target.closest('[data-gtick]'); if(t){ const id=t.dataset.gtick; grocTick.has(id)?grocTick.delete(id):grocTick.add(id); saveTicks(); updatePickBar();
     const row=t.closest('.grow'); if(row) row.classList.toggle('done',grocTick.has(id));
     lastGridHTML=null; const st=document.querySelector('.gstore .gtn'); if(st){ const n=document.querySelectorAll('.grow').length; st.textContent=document.querySelectorAll('.grow.done').length+'/'+n+' ticked'; } }
 });
@@ -1116,7 +1264,7 @@ function grocSheetBuild(p){
     +'<div style="flex:1;min-width:0"><div class="gs-name">'+esc(p.nameEn)+'</div><div class="gs-sub">'+esc(sub||p.nameFr||'')+'</div></div>'
     +'</div>';
   if(!all.length){
-    h+='<div class="gs-usual gs-in" style="--d:1"><div><div class="gs-eyebrow">No price yet</div><div class="empty-note" style="margin-top:6px">Log a purchase from the Prices tab and the price shows up here.</div></div></div>';
+    h+='<div class="gs-usual gs-in" style="--d:1"><div><div class="gs-eyebrow">No price yet</div><div class="empty-note" style="margin-top:6px">Type a price when you check in, or log a purchase from the Prices tab, and its history shows up here.</div></div></div>';
   } else {
     const last=all[all.length-1], prices=all.map(x=>x.price), min=Math.min.apply(null,prices), minP=all.slice().reverse().find(x=>x.price===min), avg=prices.reduce((a,b)=>a+b,0)/prices.length;
     const cheaper = min<last.price-.004;
@@ -1137,25 +1285,27 @@ function grocSheetBuild(p){
   const on=onList(p), prevOn=(gsSw[p.id]!=null?gsSw[p.id]:on); gsSw[p.id]=on;
   const why = on ? (needsBuying(p)?'Running low':'Added by you') : (needsBuying(p)?'Hidden while running low':'In stock');
   h+='<div class="gs-toggle gs-in" style="--d:4"><div><b>On my shopping list</b><small>'+why+'</small></div><button class="gs-sw'+(prevOn?' on':'')+'" role="switch" aria-checked="'+on+'" data-act="gtoggle" aria-label="On my shopping list"><i></i></button></div>';
-  if(prevOn!==on) setTimeout(()=>{ const el=document.querySelector('.gs-sw'); if(el) el.classList.toggle('on',on); },40);
-  h+='<div class="gs-actions gs-in" style="--d:5"><button class="btn tall" data-act="gskip" style="flex:1">Done</button><button class="btn tall gsgot'+(grocTick.has(p.id)?' ok':'')+'" data-act="gsgot" style="flex:1.6" aria-pressed="'+grocTick.has(p.id)+'"><i class="gsck"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i><span>Got it</span></button></div><button class="btn block gslog" data-act="logbuy"'+(grocTick.has(p.id)?'':' hidden')+'>Log what you paid</button>';
+  if(prevOn!==on) setTimeout(()=>{ const el=document.querySelector('.gs-sw'); if(el) el.classList.toggle('on',on); const g=document.querySelector('.gsgot'); if(g){ g.classList.toggle('gshide',!on); g.tabIndex=on?0:-1; g.setAttribute('aria-hidden',!on); } },40);
+  h+='<div class="gs-actions gs-in" style="--d:5"><button class="btn tall" data-act="gskip" style="flex:1">Done</button><button class="btn tall gsgot'+(grocTick.has(p.id)&&on?' ok':'')+(prevOn?'':' gshide')+'" tabindex="'+(on?0:-1)+'" aria-hidden="'+(!on)+'" data-act="gsgot" style="flex:1.6" aria-pressed="'+grocTick.has(p.id)+'"><i class="gsck"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i><span>Got it</span></button></div><button class="btn block gslog" data-act="logbuy"'+(grocTick.has(p.id)?'':' hidden')+'>Log what you paid</button>';
   return h;
 }
 function cardHTML(p){
   const s = sortedPacks(p), act = s[0], lv = act?act.level:0, extra = s.slice(1);
-  const minis = extra.slice(0,3).map((x,i)=>iconSVG(p.icon,x.level,p.color,'c_'+p.id+'_m'+i,false)).join('');
-  const more = extra.length>3 ? '<span class="more">+'+(extra.length-3)+'</span>' : '';
+  const cart = !p.archived && onList(p);
+  const minis = extra.slice(0,2).map((x,i)=>iconSVG(p.icon,x.level,p.color,'c_'+p.id+'_m'+i,false)).join('');
+  const more = extra.length>2 ? '<span class="more">+'+(extra.length-2)+'</span>' : '';
   const qty = act ? fmtQty(lv*packSize(p,act), p.unit) : '';
   const title = esc(p.nameEn)+(extra.length?' ('+(extra.length+1)+' packs)':'');
   const ink = onInk(p.color);
-  const top = '<div class="ctop'+(extra.length?' hm':'')+'"><div class="bigq">'+(act?qty:'Empty')+'</div>'+(act?'<div class="lvlsm">'+lvlLabel(lv)+'</div>':'')+'</div>';
+  const top = '<div class="ctop'+((extra.length||cart)?' hm':'')+'"><div class="bigq">'+(act?qty:'Empty')+'</div>'+(act?'<div class="lvlsm">'+lvlLabel(lv)+'</div>':'')+'</div>';
   const mid = '<div class="icowrap">'+artIcon(p,'c_'+p.id)+'</div>';
   const bot = '<div class="cbot"><div class="en">'+esc(p.nameEn)+'</div><div class="fr">'+esc(p.nameFr||'')+'</div></div>';
   const dup = '<div class="fgdup'+(ink==='#FFFFFF'?' fg-w':'')+'" aria-hidden="true" style="color:'+ink+'">'+top+mid+bot+'</div>';
   return '<button class="card '+(lv>0?'stocked':'empty')+(p.archived?' archived':'')+(p.id===openId&&mode==='view'?' sel':'')+'" style="--pc:'+esc(p.color)+'" data-open="'+esc(p.id)+'" title="'+title+'">'
     + top + mid + bot
     + tankHTML(lv,'tk_'+p.id,dup)
-    + (extra.length?'<div class="minis">'+minis+more+'</div>':'')
+    + (cart?'<span class="cartdot" aria-label="On your shopping list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h3l2.4 11h9.2L20 7H7"/><circle cx="9.5" cy="19" r="1.3"/><circle cx="17" cy="19" r="1.3"/></svg></span>':'')
+    + (extra.length?'<div class="minis'+(cart?' hasc':'')+'">'+minis+more+'</div>':'')
     + '</button>';
 }
 
@@ -1176,10 +1326,12 @@ function revealCard(){
   const sh=$('#sheet').offsetHeight, r=c.getBoundingClientRect(), vh=window.innerHeight;
   if(r.top<8 || r.bottom>vh-sh-8) window.scrollBy({top:r.top-24, behavior:'smooth'});
 }
+const UNITSIZE={g:500,ml:1000,pcs:12,pct:100};
+const CATCOL={bathroom:COLORS[2],pantry:COLORS[6],fridge:COLORS[0],household:COLORS[9]};
 function openNew(){
   const sh0=$('#sheet'); clearTimeout(closeT); const was0=sh0.classList.contains('on')&&!sh0.classList.contains('closing'); sh0.classList.remove('closing'); sheetNav = was0?'swap':'open';
   openId=null; mode='new';
-  editTab='details'; draft={nameEn:'',nameFr:'',brand:'',category:(CATS.some(c=>c.k===catView)&&catView!=='other'?catView:'pantry'),icon:'jar',color:COLORS[0],unit:'g',packSize:500,have:true,sub:''};
+  editTab='details'; draft={nameEn:'',nameFr:'',brand:'',category:(CATS.some(c=>c.k===catView)&&catView!=='other'?catView:'pantry'),icon:'jar',color:COLORS[0],unit:'g',packSize:500,have:appTab!=='groceries',sub:''}; draft.color=CATCOL[draft.category]||COLORS[0];
   document.body.classList.remove('sheet-open');
   $('#sheet').classList.remove('pv'); $('#sheet').classList.add('on','tall'); renderSheet(); $('#sheet').scrollTop=0; render();
 }
@@ -1192,8 +1344,8 @@ function closeSheet(opts){
   if(opts && opts.land && id) landId=id;
   if(wasOn && !REDUCED){
     sh.classList.add('closing'); clearTimeout(closeT);
-    closeT=setTimeout(()=>{ sh.classList.remove('closing'); if(!mode) sh.classList.remove('on','tall','pv'); },250);
-  } else sh.classList.remove('on','tall','pv');
+    closeT=setTimeout(()=>{ sh.classList.remove('closing'); if(!mode) sh.classList.remove('on','tall','pv','ck'); },250);
+  } else sh.classList.remove('on','tall','pv','ck');
   render();
 }
 function onInk(hex){
@@ -1208,23 +1360,24 @@ function subHead(title){
 
 function stepFor(src){ const n=+src.packSize||1; return src.unit==='pcs'||src.unit==='pct' ? 1 : (n>=2000?100:(n>=200?50:(n>=50?10:5))); }
 function customizeHTML(src, isNew){
-  const tabs=[['details','Details'],['look','Look'],['size','Size']];
+  const tabs=[['details','Details'],['look','Look'],['size','Stock']];
   const ti=tabs.findIndex(t=>t[0]===editTab);
   let h='<div class="etabs'+(tabFrom!=null?' moving':'')+'" style="--i:'+ti+(tabFrom!=null?';--from:'+tabFrom:'')+'" role="tablist">'+tabs.map(t=>'<button class="etab" role="tab" data-etab="'+t[0]+'" aria-selected="'+(editTab===t[0])+'">'+t[1]+'</button>').join('')+'</div><div class="ebody">';
   tabFrom=null;
   if(editTab==='details'){
     h+='<div class="field"><label for="f-nameEn">Name (English)</label><input type="text" id="f-nameEn" data-f="nameEn" value="'+esc(src.nameEn)+'"></div>'
-     + '<div class="field"><label for="f-nameFr">Second name (optional)</label><input type="text" id="f-nameFr" data-f="nameFr" value="'+esc(src.nameFr||'')+'"></div>'
-     + '<div class="field"><label for="f-brand">Brand</label><input type="text" id="f-brand" data-f="brand" value="'+esc(src.brand||'')+'"></div>'
-     + '<div class="field"><label>Category</label><div class="chips sm">'+CATS.filter(c=>c.k!=='other').map(c=>'<button class="chip" data-catpick="'+c.k+'" aria-pressed="'+(catOf(src)===c.k)+'">'+c.name+'</button>').join('')+'</div></div>'
-     + (SECS[catOf(src)] ? '<div class="field sec-field"><label>Section in '+catName(catOf(src))+' <span style="font-weight:500;opacity:.6;text-transform:none;letter-spacing:0">· optional</span></label><div class="chips sm">'+SECS[catOf(src)].map(x=>'<button class="chip" data-subpick="'+x[0]+'" aria-pressed="'+(subOf(src)===x[0])+'">'+x[1]+'</button>').join('')+'</div></div>' : '');
+     + '<div class="row2"><div class="field"><label for="f-nameFr">Second name (optional)</label><input type="text" id="f-nameFr" data-f="nameFr" value="'+esc(src.nameFr||'')+'"></div>'
+     + '<div class="field"><label for="f-brand">Brand</label><input type="text" id="f-brand" data-f="brand" value="'+esc(src.brand||'')+'"></div></div>'
+     + '<div class="field"><label>Category</label><div class="chips sm g2">'+CATS.filter(c=>c.k!=='other').map(c=>'<button class="chip" data-catpick="'+c.k+'" aria-pressed="'+(catOf(src)===c.k)+'">'+c.name+'</button>').join('')+'</div></div>'
+     + (SECS[catOf(src)] ? '<div class="field sec-field"><label>Section in '+catName(catOf(src))+' <span style="font-weight:500;opacity:.6;text-transform:none;letter-spacing:0">· optional</span></label><div class="chips sm g2">'+SECS[catOf(src)].map(x=>'<button class="chip" data-subpick="'+x[0]+'" aria-pressed="'+(subOf(src)===x[0])+'">'+x[1]+'</button>').join('')+'</div></div>' : '');
   } else if(editTab==='look'){
     h+='<div class="field"><label>Color</label><div class="swgrid">'+COLORS.map(c=>'<button class="sw" style="background:'+c+'" data-color="'+c+'" aria-pressed="'+(src.color===c)+'" aria-label="Color '+c+'"></button>').join('')+'</div></div>'
      + '<div class="field"><label>Icon</label><div class="icgrid">'+Object.keys(ICONS).map(k=>'<button class="icbtn" data-icon="'+k+'" aria-pressed="'+(src.icon===k)+'" aria-label="'+ICONS[k].label+'">'+iconSVG(k,.55,src.color,'ic_'+k,false)+'</button>').join('')+'</div></div>';
   } else {
-    h+='<div class="field"><label>Full pack size</label><div class="stepper"><button class="stp" data-step="-1" aria-label="Less">−</button>'
+    h+='<div class="field"><label>Default size for new packs</label><div class="stepper"><button class="stp" data-step="-1" aria-label="Less">−</button>'
      + '<div class="stpval"><input type="number" inputmode="numeric" min="1" id="f-packSize" data-f="packSize" value="'+esc(src.packSize)+'"><span>'+(src.unit==='pct'?'%':src.unit)+'</span></div>'
-     + '<button class="stp" data-step="1" aria-label="More">+</button></div></div>'
+     + '<button class="stp" data-step="1" aria-label="More">+</button></div><div class="hint">Only packs you add from now on. Packs already at home keep their own size.</div></div>'
+     + '<div class="field"><label>Add to my list when</label><div class="alrt"><div class="alrth"><span>Stock below</span><b id="alv">'+Math.round(alertOf(src)*100)+'%</b></div><input type="range" min="5" max="60" step="5" data-f="alertpct" value="'+Math.round(alertOf(src)*100)+'" aria-label="Alert level"><div class="alrl"><span>Late</span><span>Early</span></div><div class="chips seg">'+[[.1,'10%'],[.3,'30%'],[.5,'50%']].map(c=>'<button class="chip" data-alertpick="'+c[0]+'" aria-pressed="'+(Math.abs(alertOf(src)-c[0])<.001)+'">'+c[1]+'</button>').join('')+'</div><div class="hint">Salt and pepper can wait until almost empty. Milk may need an early reminder.</div></div></div>'
      + '<div class="field"><label>Unit</label><div class="chips seg">'+[['g','g'],['ml','ml'],['pcs','pcs'],['pct','%']].map(u=>'<button class="chip" data-unitpick="'+u[0]+'" aria-pressed="'+(src.unit===u[0])+'">'+u[1]+'</button>').join('')+'</div>'
      + (src.unit==='pct'?'<div class="hint">Use % when the pack size is unknown.</div>':'')+'</div>';
   }
@@ -1235,14 +1388,15 @@ function renderSheet(){
   const sh = $('#sheet');
   const h0 = sh.classList.contains('on') ? sh.offsetHeight : 0;
   clearTimeout(flipT); sh.style.height=''; sh.style.transition=''; sh.style.overflow='';
-  sh.classList.toggle('pv', mode==='view' && view==='packs');
+  sh.classList.toggle('pv', mode==='view' && view==='packs'); if(mode!=='new') sh.classList.remove('nw');
   if(mode==='view') sh.classList.toggle('tall', view==='packs'||view==='edit');
   if(mode==='new'){
+    sh.classList.add('nw','tall');
     sh.innerHTML = '<div class="grab"></div><button class="close" data-act="close" aria-label="Close">×</button>'
-      + '<div class="hero" style="--pc:'+draft.color+'"><div class="herotile">'+tankHTML(1,'tkn')+iconFlat(draft.icon,draft.color,'nh')+'</div><div><h2>New product</h2><div class="fr">Ingredients, cleaning, anything you restock</div></div></div>'
-      + '<h3>Details</h3>'+customizeHTML(draft,true)
-      + '<div class="field"><label><input type="checkbox" id="f-have" '+(draft.have?'checked':'')+'> I have one full pack at home</label></div>'
-      + '<div class="actions"><button class="btn primary block" data-act="create">Add to My Stock</button></div>';
+      + '<div class="hero mini" style="--pc:'+draft.color+'"><div class="herotile">'+tankHTML(1,'tkn')+iconFlat(draft.icon,draft.color,'nh')+'</div><div><h2>New product</h2><div class="fr">Anything you restock</div></div></div>'
+      + '<div class="nwbody">'+customizeHTML(draft,true)+'</div>'
+      + '<div class="nwfoot"><label class="havesw" for="f-have"><span>One full pack at home</span><input type="checkbox" id="f-have" '+(draft.have?'checked':'')+'><i></i></label>'
+      + '<button class="btn primary block" data-act="create" id="createBtn">'+(draft.have?'Add to My Stock':'Add to Groceries')+'</button></div>';
     settleFills(sh); sheetFx(h0); return;
   }
   const p0 = products.get(openId);
@@ -1273,7 +1427,7 @@ function renderSheet(){
       const extra = [cp.brand, cp.note].filter(Boolean).join(' · ');
       h += '<div class="ppanel" data-pack="'+esc(cp.id)+'">'
         + '<div class="ptitle"><div><div class="ptl">'+(i===0?'In use':'Pack '+(i+1))+' <span>· '+lvlLabel(cp.level)+'</span></div>'
-        + '<div class="pnote">'+(p.unit==='pct'?'':fmtQty(size,p.unit)+' pack')+(extra?(p.unit==='pct'?'':' · ')+esc(extra):'')+'</div></div><div class="ppct" data-ppct>'+pct+'%</div></div>'
+        + '<div class="pnote">'+(p.unit==='pct'?'':'<button class="szchip" data-act="packsize">'+fmtQty(size,p.unit)+' pack ✎</button>')+(extra?(p.unit==='pct'?'':' · ')+esc(extra):'')+'</div></div><div class="ppct" data-ppct>'+pct+'%</div></div>'
         + '<div class="hbar"><div class="hfill" data-hfill style="width:'+pct+'%"></div><div class="hlabel"><span>Slide to set</span><b data-hpct>'+pct+'%</b></div>'
         + '<input type="range" min="0" max="100" step="1" value="'+pct+'" data-qs aria-label="Amount left"></div>'
         + '<div class="qchips">'+[[.1,'10%'],[.25,'¼'],[.5,'½'],[.75,'¾'],[1,'Full']].map(c=>{
@@ -1282,7 +1436,7 @@ function renderSheet(){
           }).join('')+'</div>'
         + '<div class="qactions"><button class="btn danger tall" data-act="used" style="padding:0 20px">Used up</button><button class="btn primary tall" data-act="close" style="flex:1">Done</button></div></div>';
     } else {
-      h += '<div class="empty-note" style="padding:14px 0">Nothing at home right now. Tap + to add a full pack.</div>';
+      h += '<div class="empty-note" style="padding:14px 0">Nothing at home right now.</div>';
     }
   }
   else if(view==='prices'){
@@ -1311,7 +1465,7 @@ function renderSheet(){
     h = subHead('Edit product')
       + '<div class="hero mini" style="--pc:'+esc(p.color)+'"><div class="herotile">'+tankHTML(1,'tke')+artIcon(p,'ne')+'</div><div><h2>'+esc(p.nameEn||'Untitled')+'</h2><div class="fr">'+esc(catName(catOf(p))+' · '+fmtQty(packSize(p,{}),p.unit))+'</div></div></div>'
       + customizeHTML(p,false)
-      + (editTab==='size'?'<div class="actions"><button class="btn tall" data-act="archive" style="flex:1">'+(p.archived?'Bring back':'Archive')+'</button><button class="btn danger tall" data-act="delete" style="flex:1">Delete</button></div>':'');
+      + (editTab==='details'?'<div class="manage"><button class="btn tall" data-act="archive">'+(p.archived?'Bring back':'Archive')+'</button><button class="btn danger tall" data-act="delete">Delete</button></div>':'');
   }
   else if(appTab==='groceries'){
     h = grocSheetHTML(p);
@@ -1323,7 +1477,7 @@ function renderSheet(){
     const brand = (cp && cp.brand) || p.brand || '';
     const note = cp && cp.note ? cp.note : '';
     h = '<div class="grab"></div><div class="qhead"><div><div class="eyebrow">'+esc([brand,label,note].filter(Boolean).join(' · '))+'</div>'
-      + '<div class="qbig"><span data-qbig>'+(cp?fmtQty(lv*size,p.unit):'—')+'</span>'+(cp&&p.unit!=='pct'?'<span class="qof"> of '+fmtQty(size,p.unit)+'</span>':'')+'</div></div>'
+      + '<div class="qbig"'+(cp?'':' style="display:none"')+'><span data-qbig>'+(cp?fmtQty(lv*size,p.unit):'—')+'</span>'+(cp&&p.unit!=='pct'?'<span class="qof"> of '+fmtQty(size,p.unit)+'</span>':'')+'</div></div>'
       + '<button class="x" data-act="close" aria-label="Close">×</button></div>';
     if(cp){
       h += '<div data-pack="'+esc(cp.id)+'"><div class="hbar"><div class="hfill" data-hfill style="width:'+pct+'%"></div>'
@@ -1334,7 +1488,7 @@ function renderSheet(){
             return '<button class="qchip'+(on?' on':'')+'" data-act="set" data-v="'+c[0]+'"'+'>'+c[1]+'</button>';
           }).join('')+'</div></div>';
     } else {
-      h += '<div class="empty-note" style="margin-bottom:12px">Nothing at home right now.</div><button class="btn primary block tall" data-act="addpack" style="margin-bottom:12px">+ Add a full pack</button>';
+      h += '<button class="btn primary block tall" data-act="addpack" style="margin-bottom:12px">+ Add a full pack</button>';
     }
     h += '<div class="tiles">'
       + '<button class="tile" data-act="goto" data-v="packs"><b>'+s.length+'</b>Packs</button>'
@@ -1352,9 +1506,11 @@ function renderSheet(){
 function setLevel(packId, v){
   const p = products.get(openId); if(!p) return;
   v = Math.max(0, Math.min(1, v));
+  const prev=(p.packs||[]).slice(), id=openId, nm=p.nameEn;
   const packs = (p.packs||[]).map(x=>x.id===packId?Object.assign({},x,{level:v}):x).filter(x=>x.level>0);
   if(selPackId && !packs.find(x=>x.id===selPackId)) selPackId=null;
   persist(openId,{packs});
+  if(v<=0) toast(nm+' used up',()=>{ persist(id,{packs:prev}); });
 }
 document.addEventListener('mousedown', e=>{ if(e.target.closest('[data-etab],[data-step]')) e.preventDefault(); });
 document.addEventListener('click',e=>{
@@ -1364,6 +1520,7 @@ document.addEventListener('click',e=>{
   ul.querySelectorAll('li').forEach(x=>x.classList.toggle('dim',!on&&x.dataset.store!==st));
 });
 document.addEventListener('click', e=>{
+  const alp = e.target.closest('[data-alertpick]'); if(alp){ fieldChange('alert', +alp.dataset.alertpick); return; }
   const cat = e.target.closest('[data-cat]'); if(cat){ goCat(cat.dataset.cat); return; }
   const goff = e.target.closest('[data-goff]'); if(goff){ goOff(true); return; }
   const gadd = e.target.closest('[data-gadd]'); if(gadd){ const id=gadd.dataset.gadd, cur=products.get(id); if(cur){ const row=gadd.closest('.grow'); const g=ghostOut(row,'Restore'); if(g){ g.style.background='var(--surface)'; g.style.borderRadius='18px'; } persist(id,{gpin: needsBuying(cur)?null:{mode:'on',at:stockLeft(cur)}}); toast('Added to your list'); } return; }
@@ -1386,10 +1543,11 @@ document.addEventListener('click', e=>{
   }
   else if(act==='gtoggle' && p){
     const cur=Object.assign({id:openId},p), nowOn=!onList(cur), nat=needsBuying(cur);
+    if(!nowOn && grocTick.has(openId)){ grocTick.delete(openId); saveTicks(); const row=document.querySelector('.grow [data-gtick="'+openId+'"]'); if(row){ const r=row.closest('.grow'); if(r) r.classList.remove('done'); } }
     persist(openId,{gpin: nowOn===nat ? null : {mode:nowOn?'on':'off', at:stockLeft(cur)}});
   }
   else if(act==='gskip'){ closeSheet(); }
-  else if(act==='gsgot'){ const on=!b.classList.contains('ok'); b.classList.toggle('ok',on); b.setAttribute('aria-pressed',on); on?grocTick.add(openId):grocTick.delete(openId);
+  else if(act==='gsgot'){ const on=!b.classList.contains('ok'); b.classList.toggle('ok',on); b.setAttribute('aria-pressed',on); on?grocTick.add(openId):grocTick.delete(openId); saveTicks();
     { const lg=document.querySelector('.gslog'); if(lg){ lg.hidden=!on; if(on){ lg.classList.remove('gl-in'); void lg.offsetWidth; lg.classList.add('gl-in'); } } }
     const row=document.querySelector('.grow [data-gtick="'+openId+'"]'); if(row){ const r=row.closest('.grow'); if(r) r.classList.toggle('done',on); } }
   else if(act==='back'){ view='main'; sheetNav='back'; renderSheet(); }
@@ -1398,7 +1556,9 @@ document.addEventListener('click', e=>{
   else if(act==='pickpack'){ selPackId=pid; popQ('.ppanel','swapin'); popQ('.ptile.sel','pop'); renderSheet(); }
   else if(act==='set'){ popQ('.qbig','bump'); popQ('.qchip.on','pop'); setLevel(pid, +b.dataset.v); }
   else if(act==='used') setLevel(pid, 0);
-  else if(act==='addpack' && p){ popQ('.shelf .ptile:nth-last-child(2)','born'); persist(openId,{packs:(p.packs||[]).concat([{id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),level:1,size:p.packSize,addedAt:new Date().toISOString().slice(0,10)}])}); }
+  else if(act==='addpack' && p){ openAddPacks(); }
+  else if(act==='packsize' && p){ const pk0=(p.packs||[]).find(x=>x.id===pid); if(pk0){ const cur0=Object.assign({id:openId},p); openSize({title:p.nameEn+' · pack size',sub:'This pack only',unit:p.unit,val:packSize(p,pk0),usual:p.packSize||1,last:ckLastSize(cur0),note:'Corrects the size of this pack. Its level stays the same.'},v=>{ const pp=products.get(openId); if(pp) persist(openId,{packs:(pp.packs||[]).map(x=>x.id===pid?Object.assign({},x,{size:v}):x)}); ovClose(); }); } }
+  else if(act==='addpack_old' && p){ popQ('.shelf .ptile:nth-last-child(2)','born'); persist(openId,{packs:(p.packs||[]).concat([{id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),level:1,size:p.packSize,addedAt:new Date().toISOString().slice(0,10)}])}); }
   else if(act==='archive' && p){ ghostOut(document.querySelector('.card.sel'), p.archived?'Restore':'Archive'); persist(openId,{archived:!p.archived}); toast(p.archived?'Back in rotation':'Archived. History is kept.'); flipNext='flip'; closeSheet(); }
   else if(act==='delete' && p){
     if(b.dataset.sure){ const id=b.dataset.id; ghostOut(document.querySelector('.card.sel'),'Delete'); products.delete(id); flipNext='flip'; closeSheet(); if(db) db.doc('products/'+id).delete().catch(()=>toast('Could not delete')); }
@@ -1407,7 +1567,8 @@ document.addEventListener('click', e=>{
   else if(act==='create') createProduct();
 });
 function fieldChange(f, v, resetSub){
-  if(mode==='new'){ draft[f]=v; if(resetSub) draft.sub=''; if(f==='packSize') draft.packSize=Math.max(1,+v||1); renderSheet(); return; }
+  if(f==='alertpct'){ f='alert'; v=Math.max(.05,Math.min(1,(+v)/100)); }
+  if(mode==='new'){ draft[f]=v; if(resetSub) draft.sub=''; if(f==='packSize') draft.sizeTouched=true; if(f==='color'||f==='icon') draft.lookTouched=true; if(f==='unit'&&!draft.sizeTouched) draft.packSize=UNITSIZE[v]||500; if(f==='category'&&!draft.lookTouched) draft.color=CATCOL[v]||draft.color; if(f==='packSize') draft.packSize=Math.max(1,+v||1); if(f==='nameEn'||f==='nameFr'||f==='brand') return; renderSheet(); return; }
   const p = products.get(openId); if(!p) return;
   if(f==='packSize') v = Math.max(1,+v||1);
   persist(openId, resetSub?{[f]:v,sub:''}:{[f]:v});
@@ -1415,7 +1576,7 @@ function fieldChange(f, v, resetSub){
 document.addEventListener('change', e=>{
   const t = e.target;
   if(t.dataset.f){ fieldChange(t.dataset.f, t.value); return; }
-  if(t.id==='f-have'){ draft.have=t.checked; return; }
+  if(t.id==='f-have'){ draft.have=t.checked; const cb=document.getElementById('createBtn'); if(cb) cb.textContent=draft.have?'Add to My Stock':'Add to Groceries'; return; }
   const pk = t.closest && t.closest('[data-pack]'); if(!pk) return;
   if(t.matches('[data-slider],[data-qs]')){ dragging=false; setLevel(pk.dataset.pack, (+t.value)/100); }
   else if(t.matches('[data-exact]') && t.value!==''){
@@ -1494,7 +1655,10 @@ function createProduct(){
   const id = base+'-'+Math.random().toString(36).slice(2,5);
   const doc = {nameEn:draft.nameEn.trim(), nameFr:(draft.nameFr||'').trim(), brand:(draft.brand||'').trim(), category:draft.category||'pantry', sub:draft.sub||guessSub(draft.category,draft.nameEn), icon:draft.icon, color:draft.color, unit:draft.unit, packSize:Math.max(1,+draft.packSize||1), archived:false,
     packs: draft.have?[{id:'p'+Date.now().toString(36),level:1,size:Math.max(1,+draft.packSize||1),addedAt:new Date().toISOString().slice(0,10)}]:[], purchases:[]};
+  if(draft.alert>0&&draft.alert!==.3) doc.alert=draft.alert;
+  const had=draft.have;
   products.set(id, doc); flipNext='create'; bornId=id; bornAt=Date.now(); closeSheet();
+  if(!had) toast(doc.nameEn+' added to Groceries');
   if(db) db.doc('products/'+id).set(doc).catch(()=>toast('Could not save the new product')); else toast('Not connected: kept on this screen only');
 }
 $('#addBtn').addEventListener('click', openNew);
@@ -1525,7 +1689,7 @@ $('#navGroceries').addEventListener('click',()=>goTab('groceries'));
       html=groceryHTML(toBuy.slice().sort(byName)); add='none';
     } else {
       const empty=live.filter(p=>stockLeft(p)<=0).length, low=live.filter(p=>stockLeft(p)>0 && needsBuying(p)).length;
-      t='My Stock'; sub=live.length+' items · '+empty+' empty · '+low+' low'; html=catsHTML(live,arch);
+      t='My Stock'; sub=live.length+(live.length===1?' item':' items')+' · '+empty+' empty · '+low+' low'; html=catsHTML(live,arch);
     }
     u.querySelector('h1').textContent=t; u.querySelector('.sub').textContent=sub; g.innerHTML=html; g.style.animation='none';
     u.querySelector('.backchip').hidden=true; const sb=u.querySelector('.sortbtn'); if(sb) sb.hidden=true;
@@ -1586,7 +1750,7 @@ $('#tabArch').addEventListener('click',()=>{showArchived=true;render()});
 
 
 
-const APP_VERSION='2026.11.09.2';
+const APP_VERSION='2026.11.09.3';
 const COMMON=[
  ['Milk','fridge','dairy','ml',1000,'carton','#3B82F6'],['Eggs','fridge','dairy','pcs',12,'eggs','#E0A526'],['Butter','fridge','dairy','g',200,'block','#E7B416'],['Cheese','fridge','dairy','g',200,'block','#F0A32A'],['Yogurt','fridge','dairy','g',500,'jar','#8B5CF6'],
  ['Chicken breast','fridge','meat','g',500,'bag','#F0A58B'],['Ground beef','fridge','meat','g',500,'bag','#B5473A'],['Strawberries','fridge','fruit','g',454,'box','#E5484D'],['Orange juice','fridge','fruit','ml',1000,'carton','#F08A24'],['Mayonnaise','fridge','sauces','ml',400,'jar','#C9B27C'],['Ketchup','fridge','sauces','ml',400,'bottle','#E5484D'],
@@ -1613,11 +1777,11 @@ function commonDialog(openDlg,closeDlg){
 
 /* ---------- How it works. UPDATE THIS LIST WHEN THE APP CHANGES ---------- */
 const HOWTO=[
- ['#34C759','Add your products','Tap + inside a category.','Give it a name, choose the unit (g, ml, pcs or %) and the size of one pack. Tick "I have one full pack at home" if you do. In a hurry? Use Add common items in Backup & settings, then edit what you need.'],
- ['#007AFF','Packs','One pack is one bottle, box or bag.','If you have two bottles of shampoo, you have two packs. The card shows the pack you are using now (the one with the least left) and small icons for the others. Open a product and tap Packs to set each level, or + to add a full pack.','<div class="hminis"><i style="--l:100%"></i><i style="--l:40%"></i><small>Pack 1 is full. Pack 2 is in use and shows on the card.</small></div>'],
- ['#FF9500','Levels','Drag the tank or tap a fraction.','Open a product and drag the big tank, or tap a quick fraction. At 30% or less the product goes to Groceries. An empty product stays on its card, marked Empty.'],
+ ['#34C759','Add your products','Tap + inside a category.','Give it a name, pick a category and section, choose the unit (g, ml, pcs or %) and the size of one pack (it suggests a usual one). Switch on "One full pack at home" if you have it, or leave it off to put the product straight on your Groceries list. Tap + in Groceries to do the same from the list. In a hurry? Use Add common items in Backup & settings, then edit what you need.'],
+ ['#007AFF','Packs','One pack is one bottle, box or bag.','If you have two bottles of shampoo, you have two packs. The card shows the pack you are using now (the one with the least left) and small icons for the others. Open a product and tap Packs to set each level. Tap + to add packs: how many, their size, and the price if you want it saved.','<div class="hminis"><i style="--l:100%"></i><i style="--l:40%"></i><small>Pack 1 is full. Pack 2 is in use and shows on the card.</small></div>'],
+ ['#FF9500','Levels','Drag the tank or tap a fraction.','Open a product and drag the big tank, or tap a quick fraction. By default, below 30% the product goes to Groceries. Change that per product in Edit, tab Stock (salt can wait, milk needs an early reminder). Used up by mistake? Tap Undo. An empty product stays on its card, marked Empty.'],
  ['#AF52DE','Prices','In a product, open Prices.','Tap Log a purchase: store, price per unit, how many, size and date. Leave Add to stock on and the packs you bought are added for you. The history shows your last, lowest and average price, and where it was cheapest.'],
- ['#FF3B30','Groceries','Your list builds itself.','Products at 30% or less show up here, grouped by store. At the store, tap a product, then Got it, then Log what you paid. Any product can be switched on or off the list from its sheet, and Not on the list shows what else is running low.'],
+ ['#FF3B30','Groceries','Your list builds itself.','Products below their alert level show up here, grouped by store, with an estimated total. At the store, tick what you put in the cart. When you are done tap Add to stock: pick the store, tap a size if it differs this time, type the prices and each item becomes a full pack. Tapping a product and Log what you paid works for a single item. Any product can be switched on or off the list from its sheet, and Not on the list shows what else is running low.'],
  ['#8E8E93','Tidy up and stay safe','Sections, sort and backup.','Inside a category, the button next to + shows what is running out first. Swipe right from the left side of the screen to go back. Your stock lives only on this phone, so open Backup & settings and Export backup now and then, and always open the app from its Home Screen icon.']
 ];
 (function(){
@@ -1692,6 +1856,212 @@ const HOWTO=[
     if(e.target.closest('[data-act="logbuy"]')){ e.preventDefault(); e.stopPropagation(); logBuy(); }
   },true);
 })();
+/* ---------- after shopping: ticks are remembered, then added to stock ---------- */
+const TICK_KEY='mystock.ticks';
+try{ JSON.parse(localStorage.getItem(TICK_KEY)||'[]').forEach(x=>grocTick.add(x)); }catch(e){}
+function saveTicks(){ try{ localStorage.setItem(TICK_KEY, JSON.stringify([...grocTick])); }catch(e){} }
+function pickedList(){ // ticked items that are still on the list, in list order
+  return [...products.entries()].map(([id,p])=>Object.assign({id},p)).filter(p=>!p.archived&&grocTick.has(p.id)&&onList(p)).sort(byName);
+}
+let lastPick=-1;
+function updatePickBar(){
+  const bar=document.getElementById('pickbar'); if(!bar) return;
+  const picked = loaded ? pickedList().length : 0;
+  const total = loaded ? [...products.entries()].filter(([id,p])=>!p.archived&&onList(Object.assign({id},p))).length : 0;
+  const show = picked>0 && appTab==='groceries' && !grocOff && mode!=='checkin' && !openId && mode!=='new';
+  bar.classList.toggle('on',show); document.body.classList.toggle('pickbar-on',show);
+  if(picked>0){
+    bar.querySelector('b').textContent=picked+' picked';
+    const left=Math.max(0,total-picked);
+    bar.querySelector('small').textContent = left? left+(left===1?' left to find':' left to find') : 'Everything found';
+    if(lastPick!==picked && lastPick>0 && !REDUCED){ bar.classList.remove('pop'); void bar.offsetWidth; bar.classList.add('pop'); }
+  }
+  lastPick=picked;
+}
+let ck=null;
+const moneyT=v=>v>0?money(v):'—';
+function ckStores(){
+  const n=new Map(); products.forEach(p=>(p.purchases||[]).forEach(x=>{ if(x.store) n.set(x.store,(n.get(x.store)||0)+1); }));
+  const arr=[...n.entries()].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])).map(x=>x[0]).slice(0,5);
+  return arr;
+}
+function ckPriceOf(p){ const u=grocInfo(p).usual; return u?u.price:null; }
+function ckLastSize(p){ const a=(p.purchases||[]).filter(x=>+x.size>0).slice().sort((x,y)=>y.date.localeCompare(x.date)); return a[0]?+a[0].size:null; }
+const parsePrice=v=>{ const n=parseFloat(String(v).replace(',','.')); return isFinite(n)&&n>=0?n:null; };
+/* ---- bottom overlay (size picker, add packs) ---- */
+let ovCtx=null;
+function ovOpen(html){ const s=$('#ovs'); s.innerHTML='<div class="grab"></div>'+html; s.scrollTop=0; $('#ov').classList.add('on'); }
+function ovSwap(html){ const s=$('#ovs'); s.innerHTML='<div class="grab"></div>'+html; if(s.animate&&!REDUCED) s.animate([{opacity:.4},{opacity:1}],{duration:220,easing:'ease-out'}); }
+function ovClose(){ $('#ov').classList.remove('on'); ovCtx=null; if(document.activeElement&&document.activeElement.blur) document.activeElement.blur(); }
+function szHTML(c){
+  const chips=[['Usual',c.usual]]; if(c.last&&Math.abs(c.last-c.usual)>1e-9) chips.push(['Last bought',c.last]);
+  return '<div class="ovt">'+esc(c.title)+'</div><div class="cksub" style="margin-bottom:0">'+esc(c.sub)+'</div>'
+   +'<div class="szbox"><input class="szin" id="szin" inputmode="decimal" value="'+trim(c.val)+'" aria-label="Pack size"><span class="szu">'+unitLabel(c.unit)+'</span><div class="ckq"><button data-ov="szdec" aria-label="Less">−</button><button data-ov="szinc" aria-label="More">+</button></div></div>'
+   +'<div class="szchips">'+chips.map(x=>'<button class="szc" data-ov="szpick" data-v="'+x[1]+'" aria-pressed="'+(Math.abs(c.val-x[1])<1e-9)+'"><b>'+fmtQty(x[1],c.unit)+'</b><small>'+x[0]+'</small></button>').join('')+'</div>'
+   +'<div class="szn">'+esc(c.note||'')+'</div><button class="ckgo" data-ov="szdone">Done</button>';
+}
+function openSize(c,done,swap){ ovCtx={t:'size',c:Object.assign({},c),done:done}; (swap?ovSwap:ovOpen)(szHTML(ovCtx.c)); }
+function szSync(){ const c=ovCtx.c; const inp=$('#szin'); if(inp&&document.activeElement!==inp) inp.value=trim(c.val); document.querySelectorAll('.szc').forEach(b=>b.setAttribute('aria-pressed',String(Math.abs(c.val-(+b.dataset.v))<1e-9))); }
+/* ---- check-in ---- */
+function openCheckin(){
+  const picked=pickedList(); if(!picked.length) return;
+  const stores=ckStores(), count=new Map();
+  picked.forEach(p=>{ const u=grocInfo(p).usual; if(u&&u.store) count.set(u.store,(count.get(u.store)||0)+1); });
+  const top=[...count.entries()].sort((a,b)=>b[1]-a[1])[0];
+  ck={stores, store: top?top[0]:stores[0], other:!(top||stores[0]), otherName:'', rows:picked.map(p=>({id:p.id,q:1,price:'',size:p.packSize||1}))};
+  if(ck.store && !stores.includes(ck.store)) ck.stores=[ck.store].concat(stores).slice(0,5);
+  const sh=$('#sheet'); clearTimeout(closeT); sh.classList.remove('closing','pv','nw');
+  openId=null; mode='checkin'; draft=null; sheetNav='open';
+  document.body.classList.remove('sheet-open'); sh.classList.add('on','tall','ck');
+  renderCheckin(); sh.scrollTop=0; updatePickBar();
+}
+function ckRowHTML(r,i){
+  const p=Object.assign({id:r.id},products.get(r.id)), c=p.color||'#8FB8A0', last=ckPriceOf(p);
+  return '<div class="ckrow ckin-fx" data-i="'+i+'" style="--d:'+(i+1)+'">'
+    +'<div class="ckin"><span class="cktile" style="background:linear-gradient(180deg,'+c+'CC,'+c+')">'+grocIco(p)+'</span>'
+    +'<span class="cktx"><b>'+esc(p.nameEn)+'</b>'+(p.unit==='pct'?'<small>1 pack each</small>':'<button class="szchip" data-ck="size" data-i="'+i+'">'+fmtQty(r.size,p.unit)+' ✎</button>')+'</span>'
+    +'<span class="ckq"><button data-ck="dec" data-i="'+i+'" aria-label="Fewer">−</button><span>'+r.q+'</span><button data-ck="inc" data-i="'+i+'" aria-label="More">+</button></span>'
+    +'<input class="ckp" data-ckp="'+i+'" inputmode="decimal" placeholder="'+(last!=null?money(last):'$ —')+'" value="'+esc(r.price)+'" aria-label="Price of '+esc(p.nameEn)+'"></div></div>';
+}
+function ckTotal(){ let t=0, any=false; ck.rows.forEach(r=>{ const p=Object.assign({id:r.id},products.get(r.id)); const pr=parsePrice(r.price); const v=pr!=null?pr:ckPriceOf(p); if(v!=null){ t+=v*r.q; any=true; } }); return any?t:null; }
+function renderCheckin(){
+  const sh=$('#sheet'); if(!ck) return;
+  const n=ck.rows.length;
+  sh.innerHTML='<div class="grab"></div><div class="ckhead"><h2>Add to stock</h2><button class="ckcancel" data-ck="cancel">Cancel</button></div>'
+    +'<div class="cksub">'+n+(n===1?' item':' items')+' · each becomes a full pack</div>'
+    +'<div class="cklab" style="margin-top:0">Store</div><div class="ckstores">'
+    +ck.stores.map(st=>'<button class="ckst'+(STORES[(st||'').toLowerCase()]?'':' noicon')+'" data-ck="store" data-st="'+esc(st)+'" aria-pressed="'+(!ck.other&&ck.store===st)+'">'+(STORES[(st||'').toLowerCase()]?storeBadge(st,20):'')+esc(st)+'</button>').join('')
+    +'<button class="ckst noicon" data-ck="store" data-st="__other" aria-pressed="'+ck.other+'">Other</button></div>'
+    +(ck.other?'<input class="ckother" id="ckother" placeholder="Store name" value="'+esc(ck.otherName)+'" data-ckother="1">':'')
+    +'<div class="cklab">Items</div><div class="cklist">'+ck.rows.map(ckRowHTML).join('')+'</div>'
+    +'<div class="cktot" id="cktotw"><span>Estimated total</span><b id="cktot"></b></div>'
+    +'<div class="cknote">Gray prices are your last price and are used if you leave them. Tap a size to change it for that purchase.</div>'
+    +'<div class="ckfoot"><button class="ckgo" id="ckgo" data-ck="go"></button></div>';
+  ckRefresh();
+}
+function ckRefresh(){
+  const go=document.getElementById('ckgo'); if(!go||!ck) return;
+  const packs=ck.rows.reduce((n,r)=>n+r.q,0);
+  go.textContent='Add '+packs+(packs===1?' pack':' packs')+' to stock';
+  const t=ckTotal(), w=document.getElementById('cktotw'); if(w){ w.style.display=t==null?'none':''; document.getElementById('cktot').textContent=t==null?'':money(t); }
+}
+function ckClose(){ ck=null; closeSheet(); updatePickBar(); }
+function ckApply(){
+  const rows=ck.rows.slice(); if(!rows.length) return;
+  const store = ck.other ? (ck.otherName||'').trim() : ck.store, today=new Date().toISOString().slice(0,10);
+  const leaving=[], pickedIds=rows.map(r=>r.id);
+  rows.forEach(r=>{
+    const cur=products.get(r.id); if(!cur) return;
+    const p=Object.assign({id:r.id},cur), sz=r.size||p.packSize||1;
+    const typed=parsePrice(r.price), price=typed!=null?typed:ckPriceOf(p);
+    const packs=(cur.packs||[]).slice();
+    for(let k=0;k<r.q;k++) packs.push({id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),level:1,size:sz,addedAt:today});
+    const patch={packs};
+    if(price!=null) patch.purchases=(cur.purchases||[]).concat([Object.assign({date:today,price:price,qty:r.q,promo:false,size:sz,src:'checkin'},store?{store:store}:{})]);
+    if(onList(Object.assign({id:r.id},cur,patch))===false) leaving.push(r.id);
+    r.patch=patch;
+  });
+  leaving.forEach(id=>{ const row=document.querySelector('.grow[data-id="'+id+'"]'); if(row){ const g=ghostOut(row,'Archive'); if(g){ g.style.background='var(--surface)'; g.style.borderRadius='18px'; } } });
+  pickedIds.forEach(id=>grocTick.delete(id)); saveTicks();
+  const done=rows.reduce((n,r)=>n+r.q,0);
+  ck=null;
+  closeSheet();
+  rows.filter(r=>r.patch).forEach(r=>persist(r.id,r.patch));
+  lastGridHTML=null; render(); updatePickBar();
+  toast('Added '+done+(done===1?' pack':' packs')+' to stock');
+}
+/* ---- add packs from the Stock tab ---- */
+let ap=null;
+function openAddPacks(){
+  const p=products.get(openId); if(!p) return;
+  const cur=Object.assign({id:openId},p), u=grocInfo(cur).usual, stores=ckStores();
+  const st=(u&&u.store)||stores[0]; const list=!st?stores:(stores.includes(st)?stores:[st].concat(stores).slice(0,5));
+  ap={id:openId,q:1,size:p.packSize||1,price:'',store:st,other:!st,otherName:'',stores:list};
+  ovCtx={t:'ap'}; ovOpen(apHTML());
+}
+function apHTML(){
+  const p=Object.assign({id:ap.id},products.get(ap.id)), last=ckPriceOf(p);
+  return '<div class="ovh"><div class="ovt">Add packs</div><button class="ckcancel" data-ov="close">Cancel</button></div><div class="cksub" style="margin-bottom:0">'+esc(p.nameEn)+'</div>'
+   +'<div class="aprows"><div class="aprow"><span>Packs</span><span class="ckq"><button data-ov="apdec" aria-label="Fewer">−</button><span id="apq">'+ap.q+'</span><button data-ov="apinc" aria-label="More">+</button></span></div>'
+   +(p.unit==='pct'?'':'<div class="aprow"><span>Size</span><button class="szchip big" data-ov="apsize" id="apsz">'+fmtQty(ap.size,p.unit)+' ✎</button></div>')
+   +'<div class="aprow"><span>Price each</span><input class="ckp" style="width:78px;height:34px" data-ovp="1" inputmode="decimal" placeholder="'+(last!=null?money(last):'$ —')+'" value="'+esc(ap.price)+'" aria-label="Price each"></div>'
+   +'<div class="aprow"><span>Store</span><div class="apst">'+ap.stores.map(st=>'<button class="ckst noicon" data-ov="apstore" data-st="'+esc(st)+'" aria-pressed="'+(!ap.other&&ap.store===st)+'">'+esc(st)+'</button>').join('')+'<button class="ckst noicon" data-ov="apstore" data-st="__other" aria-pressed="'+ap.other+'">Other</button></div></div></div>'
+   +(ap.other?'<input class="ckother" id="apother" placeholder="Store name" value="'+esc(ap.otherName)+'" data-ovother="1">':'')
+   +'<div class="szn">Starts at the default size. Tap the size for a different pack. Type a price to log the purchase too.</div>'
+   +'<button class="ckgo" id="apgo" data-ov="apgo">Add '+ap.q+(ap.q===1?' pack':' packs')+'</button>';
+}
+function apGo(){
+  const cur=products.get(ap.id); if(!cur){ ovClose(); return; }
+  const today=new Date().toISOString().slice(0,10), store=ap.other?(ap.otherName||'').trim():ap.store, id=ap.id;
+  const packs=(cur.packs||[]).slice();
+  for(let k=0;k<ap.q;k++) packs.push({id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),level:1,size:ap.size,addedAt:today});
+  const patch={packs}, price=parsePrice(ap.price);
+  if(price!=null) patch.purchases=(cur.purchases||[]).concat([Object.assign({date:today,price:price,qty:ap.q,promo:false,size:ap.size,src:'addpack'},store?{store:store}:{})]);
+  const n=ap.q; ap=null; ovClose();
+  popQ('.shelf .ptile:nth-last-child(2)','born'); persist(id,patch);
+  toast(n+(n===1?' pack':' packs')+' added');
+}
+document.addEventListener('click',e=>{
+  const o=e.target.closest('[data-ov]'); if(o){
+    const a=o.dataset.ov;
+    if(a==='close'){ ovClose(); return; }
+    if(ovCtx&&ovCtx.t==='size'){
+      const c=ovCtx.c, st=Math.max(1,stepFor({packSize:c.val,unit:c.unit}));
+      if(a==='szinc'){ c.val=+(c.val+st).toFixed(2); szSync(); }
+      else if(a==='szdec'){ c.val=Math.max(1,+(c.val-st).toFixed(2)); szSync(); }
+      else if(a==='szpick'){ c.val=+o.dataset.v; szSync(); }
+      else if(a==='szdone'){ const v=+(c.val); if(!(v>0)){ toast('Enter a size'); return; } const f=ovCtx.done; f(v); }
+      return;
+    }
+    if(ap&&ovCtx&&ovCtx.t==='ap'){
+      if(a==='apinc'||a==='apdec'){ ap.q=Math.max(1,Math.min(20,ap.q+(a==='apinc'?1:-1))); document.getElementById('apq').textContent=ap.q; document.getElementById('apgo').textContent='Add '+ap.q+(ap.q===1?' pack':' packs'); }
+      else if(a==='apstore'){
+        if(o.dataset.st==='__other') ap.other=true; else { ap.other=false; ap.store=o.dataset.st; }
+        document.querySelectorAll('.apst .ckst').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.st==='__other'?ap.other:(!ap.other&&ap.store===x.dataset.st))));
+        let inp=document.getElementById('apother');
+        if(ap.other&&!inp){ inp=document.createElement('input'); inp.className='ckother'; inp.id='apother'; inp.placeholder='Store name'; inp.value=ap.otherName; inp.dataset.ovother='1'; document.querySelector('.aprows').after(inp); inp.focus(); }
+        else if(!ap.other&&inp) inp.remove();
+      }
+      else if(a==='apsize'){ const p=Object.assign({id:ap.id},products.get(ap.id)); openSize({title:p.nameEn+' · pack size',sub:'For the packs you add now',unit:p.unit,val:ap.size,usual:p.packSize||1,last:ckLastSize(p),note:'Saved with the pack and the purchase, so the price per unit stays right.'},v=>{ ap.size=v; ovCtx={t:'ap'}; ovSwap(apHTML()); },true); }
+      else if(a==='apgo'){ apGo(); }
+    }
+    return;
+  }
+  const b=e.target.closest('[data-ck]'); if(!b) return;
+  const a=b.dataset.ck, i=+b.dataset.i;
+  if(a==='open'){ openCheckin(); return; }
+  if(!ck) return;
+  if(a==='cancel'){ ckClose(); return; }
+  if(a==='go'){ ckApply(); return; }
+  if(a==='store'){
+    if(b.dataset.st==='__other'){ ck.other=true; } else { ck.other=false; ck.store=b.dataset.st; }
+    document.querySelectorAll('.ckst').forEach(x=>x.setAttribute('aria-pressed', String(x.dataset.st==='__other'?ck.other:(!ck.other&&ck.store===x.dataset.st))));
+    let inp=document.getElementById('ckother');
+    if(ck.other && !inp){ inp=document.createElement('input'); inp.className='ckother'; inp.id='ckother'; inp.placeholder='Store name'; inp.value=ck.otherName; inp.dataset.ckother='1'; document.querySelector('.ckstores').after(inp); if(inp.animate&&!REDUCED) inp.animate([{opacity:0,transform:'translateY(-6px)'},{opacity:1,transform:'none'}],{duration:260,easing:'cubic-bezier(.2,.8,.2,1)'}); inp.focus(); }
+    else if(!ck.other && inp) inp.remove();
+    return;
+  }
+  const r=ck.rows[i]; if(!r) return;
+  const row=document.querySelector('.ckrow[data-i="'+i+'"]');
+  if(a==='inc'||a==='dec'){
+    r.q=Math.max(1,Math.min(20,r.q+(a==='inc'?1:-1)));
+    const sp=row.querySelector('.ckq span'); sp.textContent=r.q; sp.classList.remove('bump'); void sp.offsetWidth; sp.classList.add('bump'); ckRefresh(); return;
+  }
+  if(a==='size'){
+    const p=Object.assign({id:r.id},products.get(r.id));
+    openSize({title:p.nameEn+' · pack size',sub:'For this purchase only',unit:p.unit,val:r.size,usual:p.packSize||1,last:ckLastSize(p),note:'Saved with the pack and the purchase, so the price per unit stays right when you compare stores.'},v=>{ r.size=v; const ch=row.querySelector('.szchip'); if(ch) ch.textContent=fmtQty(v,p.unit)+' ✎'; ovClose(); });
+    return;
+  }
+});
+document.addEventListener('input',e=>{
+  const t=e.target;
+  if(t.dataset&&t.dataset.f==='alertpct'){ const v=document.getElementById('alv'); if(v) v.textContent=t.value+'%'; return; }
+  if(t.id==='szin'&&ovCtx&&ovCtx.t==='size'){ const v=parseFloat(String(t.value).replace(',','.')); if(isFinite(v)&&v>0){ ovCtx.c.val=v; document.querySelectorAll('.szc').forEach(b=>b.setAttribute('aria-pressed',String(Math.abs(v-(+b.dataset.v))<1e-9))); } return; }
+  if(ap&&t.dataset){ if(t.dataset.ovp!=null) ap.price=t.value; else if(t.dataset.ovother) ap.otherName=t.value; return; }
+  if(!ck) return;
+  if(t.dataset&&t.dataset.ckp!=null){ ck.rows[+t.dataset.ckp].price=t.value; ckRefresh(); }
+  else if(t.dataset&&t.dataset.ckother){ ck.otherName=t.value; }
+});
 
 /* ---------- start ---------- */
 render();
