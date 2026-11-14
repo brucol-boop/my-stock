@@ -807,7 +807,7 @@ input,select,textarea{font-size:max(16px,1em)}
     <h1 class="wel-t">My Stock</h1>
     <p class="wel-s">Know what is at home before you go shopping.</p>
     <div class="wel-mid"></div>
-    <div class="wel-btns"><button class="btn primary" id="welOpen">Open</button><button class="btn" id="welHow">How it works</button><div class="wel-v">Version 2026.11.13.2</div></div>
+    <div class="wel-btns"><button class="btn primary" id="welOpen">Open</button><button class="btn" id="welHow">How it works</button><div class="wel-v">Version 2026.11.13.3</div></div>
   </div>
 </div>
 
@@ -1116,7 +1116,7 @@ let sortLow=false, secFx=false;
 const catOf=p=>CATS.some(c=>c.k===p.category)?p.category:'other';
 const catName=k=>(CATS.find(c=>c.k===k)||{}).name||'Other';
 function catTile(c,items){
-  const low = items.filter(needsBuying).length;
+  const low = items.filter(onList).length;
   return '<button class="cat" style="--cc:'+c.color+'" data-cat="'+c.k+'"><span class="cicon"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+c.icon+'</svg></span>'
     + (low?'<span class="cflag">'+low+' to buy</span>':'')
     + '<span class="cname">'+c.name+'</span><span class="cmeta">'+items.length+(items.length===1?' item':' items')+'</span></button>';
@@ -1180,7 +1180,7 @@ function render(){
     list = arch; title = 'Archived'; summary = arch.length+(arch.length===1?' item':' items')+' · history kept';
   } else {
     list = live.filter(p=>catOf(p)===catView||pinned(p)); title = catName(catView);
-    const lb = live.filter(p=>catOf(p)===catView && needsBuying(p)).length;
+    const lb = live.filter(p=>catOf(p)===catView && onList(p)).length;
     summary = (n=>n+(n===1?' item':' items'))(live.filter(p=>catOf(p)===catView).length)+(lb?' · '+lb+' to buy':'');
   }
   if(list) list = list.slice().sort(byName);
@@ -1810,7 +1810,7 @@ $('#tabArch').addEventListener('click',()=>{showArchived=true;render()});
 
 
 
-const APP_VERSION='2026.11.13.2';
+const APP_VERSION='2026.11.13.3';
 const COMMON=[
  ['Milk','fridge','dairy','ml',1000,'carton','#3B82F6'],['Eggs','fridge','dairy','pcs',12,'eggs','#E0A526'],['Butter','fridge','dairy','g',200,'block','#E7B416'],['Cheese','fridge','dairy','g',200,'block','#F0A32A'],['Yogurt','fridge','dairy','g',500,'jar','#8B5CF6'],
  ['Chicken breast','fridge','meat','g',500,'bag','#F0A58B'],['Ground beef','fridge','meat','g',500,'bag','#B5473A'],['Strawberries','fridge','fruit','g',454,'box','#E5484D'],['Orange juice','fridge','fruit','ml',1000,'carton','#F08A24'],['Mayonnaise','fridge','sauces','ml',400,'jar','#C9B27C'],['Ketchup','fridge','sauces','ml',400,'bottle','#E5484D'],
