@@ -746,6 +746,32 @@ body.pickbar-on .app{padding-bottom:190px}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 input,select,textarea{font-size:max(16px,1em)}
 
+
+/* voice purchase */
+.vbfoot{position:sticky;bottom:calc(-24px - env(safe-area-inset-bottom));background:var(--sheet);margin:6px -20px 0;padding:2px 20px calc(24px + env(safe-area-inset-bottom));box-shadow:0 -1px 0 var(--line)}
+.logbtn,.vbbtn{margin-right:0}
+@media (max-width:420px){.topbtns{gap:6px}.topbtns .addbtn{width:42px;height:42px}}
+.vbl{position:absolute;width:1px;height:1px;overflow:hidden}
+.vbta{width:100%;box-sizing:border-box;border:0;background:var(--fillgray,rgba(120,120,128,.14));border-radius:16px;padding:12px 14px;font-size:16px;line-height:1.4;resize:none;color:var(--ink)}
+.vbmic{display:flex;justify-content:center;margin:14px 0 4px}
+.vbmicb{width:68px;height:68px;border-radius:34px;border:0;background:var(--accent);display:grid;place-items:center;cursor:pointer}
+.vbmicb.on{background:#FF3B30;animation:vbp 1.2s infinite}
+@keyframes vbp{0%{box-shadow:0 0 0 0 rgba(255,59,48,.45)}100%{box-shadow:0 0 0 22px rgba(255,59,48,0)}}
+.vbhint{text-align:center;font-size:13px;color:var(--muted);margin:2px 0 4px}
+.vbacts{display:flex;gap:10px;margin-top:14px}.vbacts .btn{flex:1;height:52px}.vbacts .prim{flex:1.5;background:var(--accent);color:var(--accent-ink);border:0}.vbacts .prim:disabled{opacity:.4}
+.vbrow{background:var(--surface);border-radius:18px;padding:10px 8px 10px 14px;margin-top:10px;border:1px solid var(--line)}
+.vbtop{display:flex;align-items:center;gap:8px}.vbn{flex:1;min-width:0}.vbn b{display:block;font-size:16px}.vbn small{font-size:12.5px;color:var(--muted)}.vbn small.warn{color:#B26A00}
+.vbni{width:100%;box-sizing:border-box;border:0;background:var(--fillgray,rgba(120,120,128,.14));border-radius:10px;padding:6px 8px;font-size:16px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.vbx{width:44px;height:44px;border:0;background:none;color:var(--muted);font-size:22px;cursor:pointer}
+.vbbot{display:flex;align-items:center;gap:10px;margin-top:4px;padding-right:6px}
+.vbstep{display:flex;align-items:center;background:var(--fillgray,rgba(120,120,128,.14));border-radius:14px}.vbstep button{width:44px;height:40px;border:0;background:none;font-size:20px;color:var(--accent);cursor:pointer}.vbstep span{min-width:36px;text-align:center;font-weight:600}
+.vbpl{margin-left:auto;font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+.vbpi{width:84px;height:40px;box-sizing:border-box;border:0;background:var(--fillgray,rgba(120,120,128,.14));border-radius:14px;padding:0 10px;text-align:right;font-weight:600;font-size:16px;color:var(--ink)}
+.vbother{width:100%;text-align:left;margin-top:8px}
+.vbadd{width:100%;height:48px;margin-top:10px;border:1.5px dashed var(--line);border-radius:18px;background:none;color:var(--accent);font-weight:600;font-size:15px;cursor:pointer}
+.vbsum{display:flex;justify-content:space-between;margin:14px 2px 0;font-size:14px;color:var(--muted)}.vbsum b{color:var(--ink)}
+.vbedit{width:100%;height:44px;margin-top:4px;border:0;background:none;color:var(--accent);font-size:15px;cursor:pointer}
+
 /* purchase log */
 .logbtn{margin-right:8px}
 .tlchips{display:flex;gap:8px;overflow-x:auto;padding:12px 2px 4px;scrollbar-width:none}
@@ -781,7 +807,7 @@ input,select,textarea{font-size:max(16px,1em)}
     <h1 class="wel-t">My Stock</h1>
     <p class="wel-s">Know what is at home before you go shopping.</p>
     <div class="wel-mid"></div>
-    <div class="wel-btns"><button class="btn primary" id="welOpen">Open</button><button class="btn" id="welHow">How it works</button><div class="wel-v">Version 2026.11.13.1</div></div>
+    <div class="wel-btns"><button class="btn primary" id="welOpen">Open</button><button class="btn" id="welHow">How it works</button><div class="wel-v">Version 2026.11.13.2</div></div>
   </div>
 </div>
 
@@ -792,7 +818,7 @@ input,select,textarea{font-size:max(16px,1em)}
       <h1 id="title">My Stock</h1>
       <div class="sub" id="summary">Loading…</div>
     </div>
-    <div class="topbtns"><button class="addbtn sortbtn" id="sortBtn" aria-label="Show what is running low first" aria-pressed="false" hidden><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h10M4 12h7M4 17h4"/><path d="M18 6v12M18 18l-3-3M18 18l3-3"/></svg></button><button class="addbtn logbtn" id="logBtn" aria-label="Purchases" hidden><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9.5 8h5M9.5 12h5"/></svg></button><button class="addbtn helpbtn" id="helpBtn" aria-label="How it works">?</button><button class="addbtn" id="addBtn" aria-label="Add product">+</button></div>
+    <div class="topbtns"><button class="addbtn sortbtn" id="sortBtn" aria-label="Show what is running low first" aria-pressed="false" hidden><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h10M4 12h7M4 17h4"/><path d="M18 6v12M18 18l-3-3M18 18l3-3"/></svg></button><button class="addbtn vbbtn" id="vbBtn" aria-label="Log a purchase by voice or text" hidden><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button><button class="addbtn logbtn" id="logBtn" aria-label="Purchases" hidden><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9.5 8h5M9.5 12h5"/></svg></button><button class="addbtn helpbtn" id="helpBtn" aria-label="How it works">?</button><button class="addbtn" id="addBtn" aria-label="Add product">+</button></div>
   </header>
   <div class="tabs">
     <button class="tab" id="tabActive" aria-pressed="true">In rotation</button>
@@ -1167,7 +1193,7 @@ function render(){
   document.querySelector('.tabbar').style.setProperty('--i', groceries?1:0);
   $('.tabs').style.display = 'none';
   $('#backBtn').hidden = !((!groceries && catView!==null) || (groceries && grocOff)); $('#backBtn').textContent = groceries ? '‹ Groceries' : '‹ Categories';
-  $('#addBtn').style.display = ''; $('#logBtn').hidden = !groceries;
+  $('#addBtn').style.display = ''; $('#logBtn').hidden = !groceries; $('#vbBtn').hidden = !groceries;
   { const sb=$('#sortBtn'); const show=!groceries && catView && catView!=='archived' && !!SECS[catView]; sb.hidden=!show; sb.setAttribute('aria-pressed',String(sortLow)); }
   $('#navStock').setAttribute('aria-current', groceries ? 'false' : 'page');
   $('#navGroceries').setAttribute('aria-current', groceries ? 'page' : 'false');
@@ -1784,7 +1810,7 @@ $('#tabArch').addEventListener('click',()=>{showArchived=true;render()});
 
 
 
-const APP_VERSION='2026.11.13.1';
+const APP_VERSION='2026.11.13.2';
 const COMMON=[
  ['Milk','fridge','dairy','ml',1000,'carton','#3B82F6'],['Eggs','fridge','dairy','pcs',12,'eggs','#E0A526'],['Butter','fridge','dairy','g',200,'block','#E7B416'],['Cheese','fridge','dairy','g',200,'block','#F0A32A'],['Yogurt','fridge','dairy','g',500,'jar','#8B5CF6'],
  ['Chicken breast','fridge','meat','g',500,'bag','#F0A58B'],['Ground beef','fridge','meat','g',500,'bag','#B5473A'],['Strawberries','fridge','fruit','g',454,'box','#E5484D'],['Orange juice','fridge','fruit','ml',1000,'carton','#F08A24'],['Mayonnaise','fridge','sauces','ml',400,'jar','#C9B27C'],['Ketchup','fridge','sauces','ml',400,'bottle','#E5484D'],
@@ -1814,7 +1840,7 @@ const HOWTO=[
  ['#34C759','Add your products','Tap + inside a category.','Give it a name, pick a category and section, choose the unit (g, ml, pcs or %) and the size of one pack (it suggests a usual one). Switch on "One full pack at home" if you have it, or leave it off to put the product straight on your Groceries list. Tap + in Groceries to do the same from the list. In a hurry? Use Add common items in Backup & settings, then edit what you need.'],
  ['#007AFF','Packs','One pack is one bottle, box or bag.','If you have two bottles of shampoo, you have two packs. The card shows the pack you are using now (the one with the least left) and small icons for the others. Open a product and tap Packs to set each level. Tap + to add packs: how many, their size, and the price if you want it saved.','<div class="hminis"><i style="--l:100%"></i><i style="--l:40%"></i><small>Pack 1 is full. Pack 2 is in use and shows on the card.</small></div>'],
  ['#FF9500','Levels','Drag the tank or tap a fraction.','Open a product and drag the big tank, or tap a quick fraction. By default, below 30% the product goes to Groceries. Change that per product in Edit, tab Stock (salt can wait, milk needs an early reminder). Used up by mistake? Tap Undo. An empty product stays on its card, marked Empty.'],
- ['#AF52DE','Prices','In a product, open Prices.','Tap Log a purchase: store, price per unit, how many, size and date. Leave Add to stock on and the packs you bought are added for you. The purchase list button (top right of Groceries) shows every shopping trip, grouped by store. The history shows your last, lowest and average price, and where it was cheapest.'],
+ ['#AF52DE','Prices','In a product, open Prices.','Tap Log a purchase: store, price per unit, how many, size and date. Leave Add to stock on and the packs you bought are added for you. The microphone button lets you say or type what you bought, then check it before it is added. The purchase list button (top right of Groceries) shows every shopping trip, grouped by store. The history shows your last, lowest and average price, and where it was cheapest.'],
  ['#FF3B30','Groceries','Your list builds itself.','Products below their alert level show up here, grouped by store, with an estimated total. At the store, tick what you put in the cart. When you are done tap Add to stock: pick the store, tap a size if it differs this time, type the prices and each item becomes a full pack. Tapping a product and Log what you paid works for a single item. Any product can be switched on or off the list from its sheet, and Not on the list shows what else is running low.'],
  ['#8E8E93','Tidy up and stay safe','Sections, sort and backup.','Inside a category, the button next to + shows what is running out first. Swipe right from the left side of the screen to go back. Your stock lives only on this phone, so open Backup & settings and Export backup now and then, and always open the app from its Home Screen icon.']
 ];
@@ -2135,6 +2161,142 @@ function tlListHTML(){
 function tlIn(root){ if(REDUCED||!root.animate) return; root.querySelectorAll('.tlmh,.tlrow').forEach((r,i)=>r.animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:280,delay:Math.min(i,10)*26,easing:'cubic-bezier(.2,.8,.2,1)',fill:'backwards'})); }
 function openLog(){ tl={view:'list',flt:'All',key:null,sc:0}; ovOpen(tlHTML()); tlIn($('#ovs')); }
 $('#logBtn').addEventListener('click', openLog);
+/* ---------- log a purchase by voice or text ---------- */
+let vb=null, vbRec=null;
+const VB_SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+const VB_NUM={one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10,um:1,uma:1,dois:2,duas:2,tres:3,'três':3,quatro:4,cinco:5,seis:6,un:1,une:1,deux:2,trois:3};
+const vbNorm=s=>String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+const vbSing=w=>w.length>3?w.replace(/ies$/,'y').replace(/(ch|sh|x|s)es$/,'$1').replace(/s$/,''):w;
+function vbMatch(name){
+  const n=vbNorm(name).replace(/[^a-z0-9 ]/g,' ').trim(); if(!n) return null;
+  const nt=n.split(/\s+/).map(vbSing).join(' ');
+  let best=null,bl=0;
+  products.forEach((p,id)=>{ if(p.archived) return;
+    [p.nameEn,p.nameFr].forEach(nm=>{ const k=vbNorm(nm).replace(/[^a-z0-9 ]/g,' ').trim(); if(!k) return;
+      const kt=k.split(/\s+/).map(vbSing).join(' ');
+      if((nt===kt||(' '+nt+' ').includes(' '+kt+' ')||(' '+kt+' ').includes(' '+nt+' ')) && kt.length>bl){ best=id; bl=kt.length; } });
+  });
+  return best;
+}
+function vbStoreFrom(t){
+  const known=ckStores().concat(Object.keys(STORES)); let store='',cut=t;
+  const m=t.match(/\b(?:at|from|in|no|na|em|chez|au|a)\s+(?:the\s+|o\s+|a\s+)?([a-z0-9&' .-]{2,28})\s*$/i);
+  if(m){ const cand=m[1].trim(), k=cand.toLowerCase();
+    const hit=known.find(x=>x.toLowerCase()===k); 
+    if(hit){ store=hit; cut=t.slice(0,m.index); } }
+  if(!store){ const low=t.toLowerCase(); const hit=known.find(x=>new RegExp('\\b'+x.toLowerCase().replace(/[.*+?^${}()|[\]\\&]/g,'\\$&')+'\\b').test(low)); if(hit){ store=hit; cut=t.replace(new RegExp('\\b(?:(?:at|from|in|no|na|em|chez|au)\\s+)?'+hit.replace(/[.*+?^${}()|[\]\\&]/g,'\\$&')+'\\b','i'),' '); } }
+  if(store){ const kk=ckStores().find(x=>x.toLowerCase()===store.toLowerCase()); if(kk) store=kk; else store=store.replace(/\b\w/g,c=>c.toUpperCase()); }
+  return {store,cut};
+}
+function vbParse(text){
+  const {store,cut}=vbStoreFrom(String(text||'').replace(/\s+/g,' ').trim());
+  const segs=cut.split(/\s*(?:,(?!\d)|;|\n|\+|\band\b|\be\b|\bet\b)\s*/i).map(s=>s.trim()).filter(Boolean);
+  const rows=[];
+  segs.forEach(sg=>{
+    let s=sg.replace(/(?:CA|US)?\$|R\$|€|£/g,' ').replace(/\b(?:bought|comprei|i got|got|paid|pagou|for|por|a|an|de|of|dollars?|reais|bucks)\b/gi,' ');
+    let size=null,unit=null; const sm=s.match(/(\d+(?:[.,]\d+)?)\s*(kg|g|ml|l|lb|oz)\b/i);
+    if(sm){ let v=parseFloat(sm[1].replace(',','.')); unit=sm[2].toLowerCase(); if(unit==='kg'){v*=1000;unit='g';} else if(unit==='l'){v*=1000;unit='ml';} else if(unit==='lb'){v*=454;unit='g';} else if(unit==='oz'){v*=28.35;unit='g';} size=Math.round(v); s=s.replace(sm[0],' '); }
+    let q=1,price=null;
+    s=s.replace(/^\s*(\d+)\s*x?\s+(?=[a-zA-Z])/,(m,a)=>{ q=Math.max(1,parseInt(a,10)); return ''; });
+    s=s.replace(/^\s*([a-zçã]+)\s+(?=[a-zA-Z])/i,(m,w)=>{ const v=VB_NUM[vbNorm(w)]; if(v){ q=v; return ''; } return m; });
+    const nums=[...s.matchAll(/\d+(?:[.,]\d+)?/g)];
+    if(nums.length){ const last=nums[nums.length-1]; price=parseFloat(last[0].replace(',','.')); s=s.replace(last[0],' '); }
+    const name=s.replace(/\s+/g,' ').replace(/[^\p{L}0-9 '&-]/gu,'').trim(); if(!name) return;
+    const pid=vbMatch(name), p=pid?products.get(pid):null;
+    let sz=null; if(p){ sz=size&&(p.unit==='g'||p.unit==='ml')&&(!unit||unit===p.unit)?size:(ckLastSize(Object.assign({id:pid},p))||p.packSize||1); }
+    else sz=size;
+    rows.push({k:Math.random().toString(36).slice(2),pid,name:p?(p.nameEn):name.charAt(0).toUpperCase()+name.slice(1),q,price:price==null?'':String(price),size:sz,unit:p?p.unit:(unit||'g')});
+  });
+  return {store,rows};
+}
+function vbCaptureHTML(){
+  return '<div class="ovt">What did you buy?</div><div class="cksub">Say it or type it. You check everything before it is saved.</div>'
+   +'<label class="vbl" for="vbText">What you bought</label><textarea id="vbText" class="vbta" rows="3" data-vb="text" placeholder="Example: 2 milk 4.50, eggs 5.19, chicken 214 g 4.75 at IGA">'+esc(vb.text)+'</textarea>'
+   +(VB_SR?'<div class="vbmic"><button class="vbmicb'+(vb.listening?' on':'')+'" data-vb="mic" aria-label="'+(vb.listening?'Stop listening':'Start dictating')+'"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button></div><div class="vbhint">'+(vb.listening?'Listening… tap to stop':'Tap the mic and talk')+'</div>'
+     :'<div class="vbhint">To dictate, tap the microphone on your keyboard.</div>')
+   +'<div class="vbacts"><button class="btn tall" data-ov="close">Cancel</button><button class="btn tall prim" data-vb="read">Read it</button></div>';
+}
+function vbTotals(){ const t=vb.rows.reduce((n,r)=>n+(parsePrice(r.price)||0)*r.q,0); const n=vb.rows.length; return {n,t}; }
+function vbReviewHTML(){
+  const stores=ckStores(); if(vb.store&&!stores.includes(vb.store)) stores.unshift(vb.store);
+  const chips=stores.map(s=>'<button class="ckst'+(STORES[(s||'').toLowerCase()]?'':' noicon')+'" data-vb="store" data-s="'+esc(s)+'" aria-pressed="'+(vb.store===s&&!vb.other)+'">'+(STORES[(s||'').toLowerCase()]?storeBadge(s,20):'')+esc(s)+'</button>').join('')+'<button class="ckst noicon" data-vb="other" aria-pressed="'+vb.other+'">Other</button>';
+  const rows=vb.rows.map(r=>{ const p=r.pid?products.get(r.pid):null;
+    return '<div class="vbrow" data-k="'+r.k+'"><div class="vbtop"><div class="vbn">'+(p?'<b>'+esc(r.name)+'</b>':'<input class="vbni" data-vb="name" data-k="'+r.k+'" value="'+esc(r.name)+'" aria-label="Item name">')+'<small class="'+(p?'':'warn')+'">'+(p?'In your stock':'Not in your stock · will be created')+(r.size&&!p?' · '+r.size+' '+r.unit:'')+'</small></div><button class="vbx" data-vb="rm" data-k="'+r.k+'" aria-label="Remove '+esc(r.name)+'">×</button></div>'
+     +'<div class="vbbot"><div class="vbstep"><button data-vb="minus" data-k="'+r.k+'" aria-label="Fewer">−</button><span>'+r.q+'</span><button data-vb="plus" data-k="'+r.k+'" aria-label="More">+</button></div><label class="vbpl">Price</label><input class="vbpi" inputmode="decimal" data-vb="price" data-k="'+r.k+'" value="'+esc(r.price)+'" placeholder="'+esc(CUR())+' —" aria-label="Price for '+esc(r.name)+'"></div></div>'; }).join('');
+  const {n,t}=vbTotals();
+  return '<div class="ovt">Check before adding</div><div class="cksub">You said: “'+esc(vb.text)+'”</div>'
+   +'<div class="ckstores">'+chips+'</div>'+(vb.other?'<input class="vbpi vbother" data-vb="otherName" value="'+esc(vb.otherName||'')+'" placeholder="Store name" aria-label="Store name">':'')
+   +'<div id="vbRows">'+(rows||'<div class="empty-note" style="margin:14px 0">Nothing recognised. Tap Edit what I said.</div>')+'</div>'
+   +'<button class="vbadd" data-vb="line">+ Add a line</button>'
+   +'<div class="vbfoot"><div class="vbsum"><span id="vbCount">'+n+(n===1?' item':' items')+'</span><b id="vbTot">'+(t>0?money(t):'')+'</b></div>'
+   +'<div class="vbacts"><button class="btn tall" data-ov="close">Cancel</button><button class="btn tall prim" id="vbGo" data-vb="add"'+(n?'':' disabled')+'>Add '+n+(n===1?' item':' items')+'</button></div><button class="vbedit" data-vb="back">Edit what I said</button></div>';
+}
+function vbRefresh(){ const {n,t}=vbTotals(); const c=$('#vbCount'),T=$('#vbTot'),g=$('#vbGo'); if(c) c.textContent=n+(n===1?' item':' items'); if(T) T.textContent=t>0?money(t):''; if(g){ g.textContent='Add '+n+(n===1?' item':' items'); g.disabled=!n; } }
+function vbStop(){ if(vbRec){ try{ vbRec.onend=null; vbRec.stop(); }catch(e){} vbRec=null; } if(vb) vb.listening=false; }
+function openVoice(){ vb={text:'',rows:[],store:'',other:false,otherName:'',listening:false,view:'capture'}; ovOpen(vbCaptureHTML()); }
+function vbRead(){
+  const r=vbParse(vb.text); vb.rows=r.rows; if(r.store){ vb.store=r.store; vb.other=false; } else if(!vb.store){ vb.store=(ckStores()[0]||''); }
+  vb.view='review'; ovSwap(vbReviewHTML());
+}
+function vbAdd(){
+  const rows=vb.rows.filter(r=>r.name); if(!rows.length) return;
+  const store=vb.other?(vb.otherName||'').trim():vb.store, today=new Date().toISOString().slice(0,10);
+  const undoOld=[], created=[]; let packsAdded=0;
+  rows.forEach(r=>{
+    if(!r.pid){ const m=vbMatch(r.name); if(m){ const mp=products.get(m); r.pid=m; r.size=ckLastSize(Object.assign({id:m},mp))||mp.packSize||1; } }
+    const price=parsePrice(r.price), pu=price!=null?{price:price}:{}, st=store?{store:store}:{};
+    if(r.pid&&products.get(r.pid)){
+      const cur=products.get(r.pid), sz=r.size||cur.packSize||1, packs=(cur.packs||[]).slice();
+      undoOld.push({id:r.pid,packs:(cur.packs||[]).slice(),purchases:(cur.purchases||[]).slice()});
+      for(let k=0;k<r.q;k++) packs.push({id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),level:1,size:sz,addedAt:today});
+      persist(r.pid,{packs,purchases:(cur.purchases||[]).concat([Object.assign({date:today,qty:r.q,promo:false,size:sz,src:'checkin'},pu,st)])});
+      grocTick.delete(r.pid); packsAdded+=r.q;
+    } else {
+      const base=r.name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'item', id=base+'-'+Math.random().toString(36).slice(2,5);
+      const unit=r.unit&&['g','ml','pcs','pct'].includes(r.unit)?r.unit:'g', sz=Math.max(1,r.size||UNITSIZE[unit]||500), cat='pantry';
+      const doc={nameEn:r.name,nameFr:'',brand:'',category:cat,sub:guessSub(cat,r.name),icon:'jar',color:CATCOL[cat]||COLORS[0],unit:unit,packSize:sz,
+        packs:[],purchases:[Object.assign({date:today,qty:r.q,promo:false,size:sz,src:'checkin'},pu,st)]};
+      for(let k=0;k<r.q;k++) doc.packs.push({id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),level:1,size:sz,addedAt:today});
+      products.set(id,doc); created.push(id); packsAdded+=r.q;
+      if(db) db.doc('products/'+id).set(doc).catch(()=>toast('Could not save the new product'));
+    }
+  });
+  saveTicks(); vbStop(); ovClose(); vb=null; lastGridHTML=null; render(); updatePickBar();
+  toast('Added '+rows.length+(rows.length===1?' item':' items')+' to stock',()=>{
+    undoOld.forEach(o=>persist(o.id,{packs:o.packs,purchases:o.purchases}));
+    created.forEach(id=>{ products.delete(id); if(db&&db.doc) try{ db.doc('products/'+id).delete(); }catch(e){} });
+    lastGridHTML=null; render(); updatePickBar(); });
+}
+function vbMic(){
+  if(!VB_SR) return;
+  if(vb.listening){ vbStop(); ovSwap(vbCaptureHTML()); return; }
+  const r=new VB_SR(); r.lang=navigator.language||'en-US'; r.interimResults=true; r.continuous=true; const base=vb.text?vb.text+' ':''; vbRec=r;
+  r.onresult=e=>{ let t=''; for(let i=0;i<e.results.length;i++) t+=e.results[i][0].transcript; vb.text=(base+t).trim(); const ta=$('#vbText'); if(ta) ta.value=vb.text; };
+  r.onerror=()=>{ vbStop(); if(vb&&vb.view==='capture'){ ovSwap(vbCaptureHTML()); toast('Could not use the microphone. Type it or use the keyboard mic'); } };
+  r.onend=()=>{ if(vb&&vb.listening){ vb.listening=false; if(vb.view==='capture') ovSwap(vbCaptureHTML()); } };
+  try{ r.start(); vb.listening=true; ovSwap(vbCaptureHTML()); }catch(e){ vbStop(); }
+}
+$('#vbBtn').addEventListener('click', openVoice);
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-vb]'); if(!b||!vb||!$('#ovs').contains(b)) return; const a=b.dataset.vb, row=vb.rows.find(r=>r.k===b.dataset.k);
+  if(a==='mic') vbMic();
+  else if(a==='read'){ vbStop(); vbRead(); }
+  else if(a==='back'){ vb.view='capture'; ovSwap(vbCaptureHTML()); }
+  else if(a==='add') vbAdd();
+  else if(a==='store'){ vb.store=b.dataset.s; vb.other=false; ovSwap(vbReviewHTML()); }
+  else if(a==='other'){ vb.other=true; ovSwap(vbReviewHTML()); const i=$('.vbother'); if(i) i.focus(); }
+  else if(a==='rm'){ vb.rows=vb.rows.filter(r=>r.k!==b.dataset.k); ovSwap(vbReviewHTML()); }
+  else if((a==='plus'||a==='minus')&&row){ row.q=Math.max(1,row.q+(a==='plus'?1:-1)); b.parentNode.querySelector('span').textContent=row.q; vbRefresh(); }
+  else if(a==='line'){ vb.rows.push({k:Math.random().toString(36).slice(2),pid:null,name:'New item',q:1,price:'',size:null,unit:'g'}); ovSwap(vbReviewHTML()); }
+});
+document.addEventListener('input',e=>{
+  const b=e.target.closest&&e.target.closest('[data-vb]'); if(!b||!vb) return; const a=b.dataset.vb;
+  if(a==='text') vb.text=b.value;
+  else if(a==='otherName') vb.otherName=b.value;
+  else if(a==='name'){ const r=vb.rows.find(x=>x.k===b.dataset.k); if(r) r.name=b.value; }
+  else if(a==='price'){ const r=vb.rows.find(x=>x.k===b.dataset.k); if(r){ r.price=b.value; vbRefresh(); } }
+});
+
 $('#ovs').addEventListener('scroll',()=>{ const t=$('#tls'); if(t) t.classList.toggle('stuck',$('#ovs').scrollTop>6); },{passive:true});
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-tl]'); if(!b) return; const a=b.dataset.tl;
