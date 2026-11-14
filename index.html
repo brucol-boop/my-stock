@@ -745,6 +745,31 @@ body.pickbar-on .app{padding-bottom:190px}
 *{touch-action:pan-x pan-y}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 input,select,textarea{font-size:max(16px,1em)}
+
+/* purchase log */
+.logbtn{margin-right:8px}
+.tlchips{display:flex;gap:8px;overflow-x:auto;padding:12px 2px 4px;scrollbar-width:none}
+.tlchip{border:0;border-radius:16px;padding:7px 13px;background:var(--surface);color:var(--ink);font-size:14px;font-weight:600;white-space:nowrap;cursor:pointer}
+.tlchip.on{background:var(--accent);color:#fff}
+.tlmh{display:flex;justify-content:space-between;padding:16px 4px 6px;color:var(--muted);font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+.tlcard{background:var(--surface);border-radius:18px;overflow:hidden}
+.tlrow,.tlitem{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);cursor:pointer;color:var(--ink);font:inherit}
+.tlrow:last-child,.tlitem:last-child{border-bottom:0}
+.tlx{flex:1;min-width:0}.tlx b{display:block;font-size:16px;font-weight:600}.tlx small{color:var(--muted);font-size:13px}
+.tla{font-weight:600;font-size:16px}.tlch{color:var(--muted);font-size:20px}
+.tlbig{text-align:center;padding:8px 0 14px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.tlbig b{font-size:34px;letter-spacing:-.02em}.tlst{color:var(--muted);font-size:14px}
+.tlt{width:40px;height:40px;flex:none}
+.tltag{font-style:normal;font-size:11px;font-weight:700;background:#FFF1D6;color:#8A5A00;border-radius:6px;padding:2px 6px;margin-left:7px;vertical-align:1px}
+.tlft{color:var(--muted);font-size:13px;padding:10px 6px 0}
+.tlback{padding-left:0}
+
+.tls{position:sticky;top:0;z-index:3;background:var(--sheet);margin:0 -20px;padding:0 20px 8px;transition:box-shadow .2s}
+.tls.stuck{box-shadow:0 1px 0 var(--line)}
+.tlchips{padding:8px 20px 2px;margin:0 -20px;scroll-behavior:auto}
+.tlchip{transition:background .22s var(--ease-out),color .22s var(--ease-out),transform .15s}
+.tlchip:active{transform:scale(.96)}
+@media (prefers-reduced-motion:reduce){.tlchip{transition:none}}
 </style>
 <script>['gesturestart','gesturechange','gestureend'].forEach(function(t){document.addEventListener(t,function(e){e.preventDefault();},{passive:false});});document.addEventListener('touchmove',function(e){if(e.touches.length>1||(e.scale&&e.scale!==1))e.preventDefault();},{passive:false});var _lt=0;document.addEventListener('touchend',function(e){var n=Date.now();if(n-_lt<300&&!(e.target.closest&&e.target.closest('input,textarea,select')))e.preventDefault();_lt=n;},{passive:false});</script>
 </head>
@@ -756,7 +781,7 @@ input,select,textarea{font-size:max(16px,1em)}
     <h1 class="wel-t">My Stock</h1>
     <p class="wel-s">Know what is at home before you go shopping.</p>
     <div class="wel-mid"></div>
-    <div class="wel-btns"><button class="btn primary" id="welOpen">Open</button><button class="btn" id="welHow">How it works</button><div class="wel-v">Version 2026.11.09.4</div></div>
+    <div class="wel-btns"><button class="btn primary" id="welOpen">Open</button><button class="btn" id="welHow">How it works</button><div class="wel-v">Version 2026.11.13.1</div></div>
   </div>
 </div>
 
@@ -767,7 +792,7 @@ input,select,textarea{font-size:max(16px,1em)}
       <h1 id="title">My Stock</h1>
       <div class="sub" id="summary">Loading…</div>
     </div>
-    <div class="topbtns"><button class="addbtn sortbtn" id="sortBtn" aria-label="Show what is running low first" aria-pressed="false" hidden><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h10M4 12h7M4 17h4"/><path d="M18 6v12M18 18l-3-3M18 18l3-3"/></svg></button><button class="addbtn" id="addBtn" aria-label="Add product">+</button></div>
+    <div class="topbtns"><button class="addbtn sortbtn" id="sortBtn" aria-label="Show what is running low first" aria-pressed="false" hidden><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h10M4 12h7M4 17h4"/><path d="M18 6v12M18 18l-3-3M18 18l3-3"/></svg></button><button class="addbtn logbtn" id="logBtn" aria-label="Purchases" hidden><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9.5 8h5M9.5 12h5"/></svg></button><button class="addbtn helpbtn" id="helpBtn" aria-label="How it works">?</button><button class="addbtn" id="addBtn" aria-label="Add product">+</button></div>
   </header>
   <div class="tabs">
     <button class="tab" id="tabActive" aria-pressed="true">In rotation</button>
@@ -1003,6 +1028,7 @@ const CUR=()=>{ let c=null; try{ c=localStorage.getItem('mystock.cur'); }catch(e
   if(c) return c; const l=(navigator.language||'en').toLowerCase();
   return l==='pt-br'||l==='pt'?'R$' : /^(fr-fr|fr-be|de|es|it|nl|pt-pt)/.test(l)?'€' : l==='en-gb'?'£' : '$'; };
 const money = n => CUR()+(+n).toFixed(2);
+function hasPrice(x){ return typeof x.price==='number' && isFinite(x.price); }
 function fmtDate(s){
   const d = new Date(s+'T12:00:00'); if(isNaN(d)) return s;
   const o = {month:'short',day:'numeric'}; if(d.getFullYear()!==new Date().getFullYear()) o.year='numeric';
@@ -1141,7 +1167,7 @@ function render(){
   document.querySelector('.tabbar').style.setProperty('--i', groceries?1:0);
   $('.tabs').style.display = 'none';
   $('#backBtn').hidden = !((!groceries && catView!==null) || (groceries && grocOff)); $('#backBtn').textContent = groceries ? '‹ Groceries' : '‹ Categories';
-  $('#addBtn').style.display = '';
+  $('#addBtn').style.display = ''; $('#logBtn').hidden = !groceries;
   { const sb=$('#sortBtn'); const show=!groceries && catView && catView!=='archived' && !!SECS[catView]; sb.hidden=!show; sb.setAttribute('aria-pressed',String(sortLow)); }
   $('#navStock').setAttribute('aria-current', groceries ? 'false' : 'page');
   $('#navGroceries').setAttribute('aria-current', groceries ? 'page' : 'false');
@@ -1171,7 +1197,7 @@ function render(){
 
 let grocStore='all'; const grocTick=new Set();
 function lastBy(p){ // latest purchase per store
-  const m=new Map(); (p.purchases||[]).slice().sort((a,b)=>a.date.localeCompare(b.date)).forEach(x=>{ if(x.store) m.set(x.store,x); }); return m;
+  const m=new Map(); (p.purchases||[]).filter(hasPrice).sort((a,b)=>a.date.localeCompare(b.date)).forEach(x=>{ if(x.store) m.set(x.store,x); }); return m;
 }
 function grocInfo(p){
   const m=lastBy(p), all=[...m.values()].sort((a,b)=>b.date.localeCompare(a.date));
@@ -1206,7 +1232,7 @@ function grocOffList(){ return [...products.entries()].map(([id,p])=>Object.assi
 function grocOffBar(){ const n=grocOffList().length; return n?'<button class="catrow gs-off" data-goff="1"><span>Not on the list</span><span class="cmeta">'+n+' ›</span></button>':''; }
 function grocOffHTML(list){
   return '<div class="gwrap"><div class="glist">'+list.map(p=>{
-    const lv=stockLeft(p), c=p.color||'#8FB8A0', last=(p.purchases||[]).slice().sort((a,b)=>b.date.localeCompare(a.date))[0];
+    const lv=stockLeft(p), c=p.color||'#8FB8A0', last=(p.purchases||[]).filter(hasPrice).sort((a,b)=>b.date.localeCompare(a.date))[0];
     return '<div class="grow" data-id="'+esc(p.id)+'"><button class="gmain" data-open="'+esc(p.id)+'"><span class="gtile" style="background:linear-gradient(180deg,'+c+'CC,'+c+')">'+grocIco(p)+'</span>'
       +'<span class="gtx"><b>'+esc(p.nameEn)+'</b><small>'+lvlLabel(lv)+(last?' · last paid '+money(last.price):'')+'</small></span></button>'
       +'<button class="gadd" data-gadd="'+esc(p.id)+'" aria-label="Add '+esc(p.nameEn)+' to the list">+</button></div>'; }).join('')+'</div></div>';
@@ -1263,7 +1289,7 @@ function grocSheetHTML(p){
   return anim?out:out.replace(/ gs-in/g,'').replace('class="gs-chart','class="gs-chart still');
 }
 function grocSheetBuild(p){
-  const all=(p.purchases||[]).slice().sort((a,b)=>a.date.localeCompare(b.date));
+  const all=(p.purchases||[]).filter(hasPrice).sort((a,b)=>a.date.localeCompare(b.date));
   const c=p.color||'#8FB8A0';
   const sub=[p.brand, p.unit==='pct'?'':fmtQty(packSize(p,{}),p.unit)].filter(Boolean).join(' · ');
   let h='<div class="grab"></div><div class="gs-head gs-in" style="--d:0"><span class="gs-tile" style="background:linear-gradient(180deg,'+c+'CC,'+c+')">'+grocIco(p)+'</span>'
@@ -1409,7 +1435,7 @@ function renderSheet(){
   if(!p0){ closeSheet(); return; }
   const p = Object.assign({id:openId}, p0);
   const s = sortedPacks(p), cp = curPack(p);
-  const hist = (p.purchases||[]).slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,10);
+  const hist = (p.purchases||[]).filter(hasPrice).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,10);
   let h = '';
   sh.style.setProperty('--pc', p.color);
   if(view==='packs'){
@@ -1449,7 +1475,7 @@ function renderSheet(){
     h = subHead('Price history') + '<button class="btn block logbuy" data-act="logbuy">+ Log a purchase</button>';
     if(!hist.length) h += '<div class="empty-note">No purchases logged yet. Tap Log a purchase to add one.</div>';
     else {
-      const all=(p.purchases||[]).slice().sort((x,y)=>y.date.localeCompare(x.date));
+      const all=(p.purchases||[]).filter(hasPrice).sort((x,y)=>y.date.localeCompare(x.date));
       const prices=all.map(x=>x.price), min=Math.min.apply(null,prices), avg=prices.reduce((a,b)=>a+b,0)/prices.length;
       h += '<div class="hsum"><div><small>Last</small><b>'+money(all[0].price)+'</b></div><div><small>Lowest</small><b>'+money(min)+'</b></div><div><small>Average</small><b>'+money(avg)+'</b></div></div>';
       h += '<ul class="hist">'+all.slice(0,20).map((x,i)=>{
@@ -1668,6 +1694,8 @@ function createProduct(){
   if(db) db.doc('products/'+id).set(doc).catch(()=>toast('Could not save the new product')); else toast('Not connected: kept on this screen only');
 }
 $('#addBtn').addEventListener('click', openNew);
+function openHelp(){ if(window.__how) window.__how(); }
+$('#helpBtn').addEventListener('click', openHelp);
 function toggleSort(){ sortLow=!sortLow; flipNext='flip'; secFx=true; render(); }
 $('#sortBtn').addEventListener('click', toggleSort);
 document.addEventListener('click', e=>{ if(e.target.closest('#lowPill')) toggleSort(); });
@@ -1756,7 +1784,7 @@ $('#tabArch').addEventListener('click',()=>{showArchived=true;render()});
 
 
 
-const APP_VERSION='2026.11.09.4';
+const APP_VERSION='2026.11.13.1';
 const COMMON=[
  ['Milk','fridge','dairy','ml',1000,'carton','#3B82F6'],['Eggs','fridge','dairy','pcs',12,'eggs','#E0A526'],['Butter','fridge','dairy','g',200,'block','#E7B416'],['Cheese','fridge','dairy','g',200,'block','#F0A32A'],['Yogurt','fridge','dairy','g',500,'jar','#8B5CF6'],
  ['Chicken breast','fridge','meat','g',500,'bag','#F0A58B'],['Ground beef','fridge','meat','g',500,'bag','#B5473A'],['Strawberries','fridge','fruit','g',454,'box','#E5484D'],['Orange juice','fridge','fruit','ml',1000,'carton','#F08A24'],['Mayonnaise','fridge','sauces','ml',400,'jar','#C9B27C'],['Ketchup','fridge','sauces','ml',400,'bottle','#E5484D'],
@@ -1786,7 +1814,7 @@ const HOWTO=[
  ['#34C759','Add your products','Tap + inside a category.','Give it a name, pick a category and section, choose the unit (g, ml, pcs or %) and the size of one pack (it suggests a usual one). Switch on "One full pack at home" if you have it, or leave it off to put the product straight on your Groceries list. Tap + in Groceries to do the same from the list. In a hurry? Use Add common items in Backup & settings, then edit what you need.'],
  ['#007AFF','Packs','One pack is one bottle, box or bag.','If you have two bottles of shampoo, you have two packs. The card shows the pack you are using now (the one with the least left) and small icons for the others. Open a product and tap Packs to set each level. Tap + to add packs: how many, their size, and the price if you want it saved.','<div class="hminis"><i style="--l:100%"></i><i style="--l:40%"></i><small>Pack 1 is full. Pack 2 is in use and shows on the card.</small></div>'],
  ['#FF9500','Levels','Drag the tank or tap a fraction.','Open a product and drag the big tank, or tap a quick fraction. By default, below 30% the product goes to Groceries. Change that per product in Edit, tab Stock (salt can wait, milk needs an early reminder). Used up by mistake? Tap Undo. An empty product stays on its card, marked Empty.'],
- ['#AF52DE','Prices','In a product, open Prices.','Tap Log a purchase: store, price per unit, how many, size and date. Leave Add to stock on and the packs you bought are added for you. The history shows your last, lowest and average price, and where it was cheapest.'],
+ ['#AF52DE','Prices','In a product, open Prices.','Tap Log a purchase: store, price per unit, how many, size and date. Leave Add to stock on and the packs you bought are added for you. The purchase list button (top right of Groceries) shows every shopping trip, grouped by store. The history shows your last, lowest and average price, and where it was cheapest.'],
  ['#FF3B30','Groceries','Your list builds itself.','Products below their alert level show up here, grouped by store, with an estimated total. At the store, tick what you put in the cart. When you are done tap Add to stock: pick the store, tap a size if it differs this time, type the prices and each item becomes a full pack. Tapping a product and Log what you paid works for a single item. Any product can be switched on or off the list from its sheet, and Not on the list shows what else is running low.'],
  ['#8E8E93','Tidy up and stay safe','Sections, sort and backup.','Inside a category, the button next to + shows what is running out first. Swipe right from the left side of the screen to go back. Your stock lives only on this phone, so open Backup & settings and Export backup now and then, and always open the app from its Home Screen icon.']
 ];
@@ -1963,7 +1991,7 @@ function ckApply(){
     const packs=(cur.packs||[]).slice();
     for(let k=0;k<r.q;k++) packs.push({id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),level:1,size:sz,addedAt:today});
     const patch={packs};
-    if(price!=null) patch.purchases=(cur.purchases||[]).concat([Object.assign({date:today,price:price,qty:r.q,promo:false,size:sz,src:'checkin'},store?{store:store}:{})]);
+    patch.purchases=(cur.purchases||[]).concat([Object.assign({date:today,qty:r.q,promo:false,size:sz,src:'checkin'},price!=null?{price:price}:{},store?{store:store}:{})]);
     if(onList(Object.assign({id:r.id},cur,patch))===false) leaving.push(r.id);
     r.patch=patch;
   });
@@ -2002,7 +2030,7 @@ function apGo(){
   const packs=(cur.packs||[]).slice();
   for(let k=0;k<ap.q;k++) packs.push({id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),level:1,size:ap.size,addedAt:today});
   const patch={packs}, price=parsePrice(ap.price);
-  if(price!=null) patch.purchases=(cur.purchases||[]).concat([Object.assign({date:today,price:price,qty:ap.q,promo:false,size:ap.size,src:'addpack'},store?{store:store}:{})]);
+  patch.purchases=(cur.purchases||[]).concat([Object.assign({date:today,qty:ap.q,promo:false,size:ap.size,src:'addpack'},price!=null?{price:price}:{},store?{store:store}:{})]);
   const n=ap.q; ap=null; ovClose();
   popQ('.shelf .ptile:nth-last-child(2)','born'); persist(id,patch);
   toast(n+(n===1?' pack':' packs')+' added');
@@ -2067,6 +2095,65 @@ document.addEventListener('input',e=>{
   if(!ck) return;
   if(t.dataset&&t.dataset.ckp!=null){ ck.rows[+t.dataset.ckp].price=t.value; ckRefresh(); }
   else if(t.dataset&&t.dataset.ckother){ ck.otherName=t.value; }
+});
+
+
+/* ---------- purchase log ---------- */
+let tl={view:'list',flt:'All',key:null};
+function buildTrips(){
+  const m=new Map();
+  products.forEach(p=>(p.purchases||[]).forEach(x=>{ if(!x.date) return; const k=x.date+'|'+(x.store||''); let t=m.get(k); if(!t){ t={key:k,date:x.date,store:x.store||'',items:[]}; m.set(k,t); } t.items.push({p:p,x:x}); }));
+  const a=[...m.values()];
+  a.forEach(t=>{ t.priced=t.items.filter(i=>hasPrice(i.x)); t.total=t.priced.reduce((n,i)=>n+i.x.price*(i.x.qty||1),0); t.partial=t.priced.length<t.items.length; });
+  return a.sort((x,y)=>y.date.localeCompare(x.date)||x.store.localeCompare(y.store));
+}
+function tlTotal(t){ return t.priced.length? money(t.total)+(t.partial?'+':'') : '—'; }
+function tlMonth(d){ const o=new Date(d+'-15T12:00:00'); const cy=o.getFullYear()!==new Date().getFullYear(); return o.toLocaleDateString('en-CA',cy?{month:'long',year:'numeric'}:{month:'long'}); }
+function tlHTML(){
+  const trips=buildTrips();
+  const head=(back,extra)=>'<div class="tls" id="tls"><div class="ovh">'+(back?'<button class="ckcancel tlback" data-tl="back">‹ Purchases</button>':'<div class="ovt">Purchases</div>')+'<button class="ckcancel" data-ov="close">Done</button></div>'+(extra||'')+'</div>';
+  if(tl.view==='trip'){
+    const t=trips.find(x=>x.key===tl.key); if(!t){ tl.view='list'; return tlHTML(); }
+    return head(true)+'<div class="tlbig">'+storeBadge(t.store,'lg')+'<div class="tlst">'+esc(t.store||'Store not set')+' · '+esc(fmtDate(t.date))+'</div><b>'+tlTotal(t)+'</b></div>'
+     +'<div class="tlcard">'+t.items.map(i=>{ const p=i.p,x=i.x,c=p.color||'#8FB8A0',sz=x.size?fmtQty(x.size,p.unit):'',br=x.brand||p.brand||'';
+       const sub=[br,(x.qty>1?x.qty+' ×':'')+(sz?(x.qty>1?' ':'')+sz:'')].filter(Boolean).join(' · ');
+       return '<button class="tlitem" data-tl="open" data-id="'+esc(p.id)+'"><span class="gtile tlt" style="background:linear-gradient(180deg,'+c+'CC,'+c+')">'+grocIco(p)+'</span><span class="tlx"><b>'+esc(p.nameEn)+(x.promo?'<i class="tltag">On sale</i>':'')+'</b><small>'+esc(sub||p.nameFr||'')+'</small></span><span class="tla">'+(hasPrice(x)?money(x.price*(x.qty||1)):'—')+'</span></button>'; }).join('')+'</div>'
+     +(t.partial?'<div class="tlft">Items without a price show a dash. The total only counts priced items.</div>':'');
+  }
+  if(!trips.length) return head(false)+'<div class="state-msg" style="padding:30px 10px">No purchases yet. They show up here after a check-in or when you add packs.</div>';
+  const stores=[]; trips.forEach(t=>{ const n=t.store||'Other'; if(!stores.includes(n)) stores.push(n); });
+  return head(false,stores.length>1?'<div class="tlchips" id="tlchips">'+['All'].concat(stores).map(n=>'<button class="tlchip'+(n===tl.flt?' on':'')+'" data-tl="flt" data-v="'+esc(n)+'">'+esc(n)+'</button>').join('')+'</div>':'')+'<div id="tllist">'+tlListHTML()+'</div>';
+}
+function tlListHTML(){
+  const trips=buildTrips(), list=trips.filter(t=>tl.flt==='All'||(t.store||'Other')===tl.flt);
+  let h=''; const months=[]; list.forEach(t=>{ const m=t.date.slice(0,7); let g=months.find(x=>x.m===m); if(!g){ g={m:m,t:[]}; months.push(g); } g.t.push(t); });
+  months.forEach(g=>{ const sum=g.t.reduce((n,t)=>n+t.total,0);
+    h+='<div class="tlmh"><span>'+esc(tlMonth(g.m))+'</span><span>'+(sum>0?money(sum):'')+'</span></div><div class="tlcard">'
+     +g.t.map(t=>'<button class="tlrow" data-tl="trip" data-k="'+esc(t.key)+'">'+storeBadge(t.store)+'<span class="tlx"><b>'+esc(t.store||'Store not set')+'</b><small>'+esc(fmtDate(t.date))+' · '+t.items.length+(t.items.length===1?' item':' items')+'</small></span><span class="tla">'+tlTotal(t)+'</span><span class="tlch">›</span></button>').join('')+'</div>'; });
+  return h;
+}
+function tlIn(root){ if(REDUCED||!root.animate) return; root.querySelectorAll('.tlmh,.tlrow').forEach((r,i)=>r.animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'none'}],{duration:280,delay:Math.min(i,10)*26,easing:'cubic-bezier(.2,.8,.2,1)',fill:'backwards'})); }
+function openLog(){ tl={view:'list',flt:'All',key:null,sc:0}; ovOpen(tlHTML()); tlIn($('#ovs')); }
+$('#logBtn').addEventListener('click', openLog);
+$('#ovs').addEventListener('scroll',()=>{ const t=$('#tls'); if(t) t.classList.toggle('stuck',$('#ovs').scrollTop>6); },{passive:true});
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-tl]'); if(!b) return; const a=b.dataset.tl;
+  if(a==='flt'){
+    const v=b.dataset.v; if(tl.flt===v) return; tl.flt=v;
+    document.querySelectorAll('.tlchip').forEach(c=>c.classList.toggle('on',c.dataset.v===v));
+    const bar=$('#tlchips'); if(bar) bar.scrollTo({left:b.offsetLeft-(bar.clientWidth-b.offsetWidth)/2,behavior:REDUCED?'auto':'smooth'});
+    const L=$('#tllist'), sh=$('#ovs'); if(!L) return;
+    if(REDUCED||!L.animate){ L.innerHTML=tlListHTML(); return; }
+    const h0=sh.offsetHeight, tk=(tl.tk=(tl.tk||0)+1);
+    L.animate([{opacity:1,transform:'none'},{opacity:0,transform:'translateY(6px)'}],{duration:120,easing:'ease-in',fill:'forwards'}).finished.then(()=>{
+      if(tk!==tl.tk) return; L.innerHTML=tlListHTML(); L.getAnimations().forEach(x=>x.cancel());
+      const h1=sh.offsetHeight; if(h1!==h0) sh.animate([{height:h0+'px'},{height:h1+'px'}],{duration:300,easing:'cubic-bezier(.2,.8,.2,1)'});
+      tlIn(L);
+    }).catch(()=>{});
+  }
+  else if(a==='trip'){ tl.sc=$('#ovs').scrollTop; tl.view='trip'; tl.key=b.dataset.k; ovSwap(tlHTML()); $('#ovs').scrollTop=0; }
+  else if(a==='back'){ tl.view='list'; ovSwap(tlHTML()); $('#ovs').scrollTop=tl.sc||0; }
+  else if(a==='open'){ const id=b.dataset.id; ovClose(); setTimeout(()=>{ const t=document.createElement('button'); t.dataset.open=id; t.hidden=true; document.body.appendChild(t); t.click(); t.remove(); },260); }
 });
 
 /* ---------- start ---------- */
